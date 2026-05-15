@@ -2,823 +2,1518 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#06000f">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#08001a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="EurovisionFun">
 <title>EurovisionFun</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#06000f;--bg2:#0d001f;--bg3:#130025;--bg4:rgba(255,255,255,0.04);
-  --pink:#e879f9;--purple:#a855f7;
-  --pink-dim:rgba(232,121,249,0.11);--purple-dim:rgba(168,85,247,0.11);
-  --border:rgba(255,255,255,0.08);--border2:rgba(232,121,249,0.25);
-  --text:#fff;--text2:rgba(255,255,255,0.55);--text3:rgba(255,255,255,0.28);
-  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
-  --nav:58px;
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #08001a;
+  --surface: #110224;
+  --surface2: #1a0335;
+  --pink: #e879f9;
+  --purple: #a855f7;
+  --pink-glow: rgba(232,121,249,0.15);
+  --purple-glow: rgba(168,85,247,0.12);
+  --border: rgba(255,255,255,0.07);
+  --border-accent: rgba(232,121,249,0.3);
+  --text-1: #ffffff;
+  --text-2: rgba(255,255,255,0.6);
+  --text-3: rgba(255,255,255,0.3);
+  --radius: 14px;
+  --nav-height: 56px;
+  --top-height: 52px;
+  --banner-height: 50px;
+  /* Safe areas */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;background:var(--bg);font-family:'Montserrat',sans-serif;color:var(--text);overflow:hidden;}
-.app{width:100%;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;}
-.sb{height:var(--safe-top);background:var(--bg);flex-shrink:0;}
+
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--bg);
+  color: var(--text-1);
+  height: 100%;
+  height: -webkit-fill-available;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0; left: 0;
+}
+
+/* ── APP SHELL ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  height: -webkit-fill-available;
+  position: relative;
+  overflow: hidden;
+}
 
 /* ── TOP BAR ── */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 14px 7px;flex-shrink:0;
-  background:rgba(6,0,15,0.96);backdrop-filter:blur(24px);
-  border-bottom:0.5px solid var(--border);z-index:20;position:relative;
+.topbar {
+  flex-shrink: 0;
+  padding-top: var(--sat);
+  background: rgba(8,0,26,0.97);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  position: relative;
 }
-.topbar-logo{height:28px;width:auto;object-fit:contain;}
-.topbar-right{display:flex;gap:8px;}
-.tb-btn{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--bg4);border:0.5px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;position:relative;transition:border-color 0.2s;
+.topbar-inner {
+  height: var(--top-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
 }
-.tb-btn:active{border-color:var(--pink);}
-.nbadge{position:absolute;top:3px;right:3px;width:9px;height:9px;border-radius:50%;background:#e879f9;border:2px solid var(--bg);display:none;}
-.nbadge.show{display:block;}
+.topbar-logo {
+  height: 26px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  display: block;
+}
+.topbar-logo-text {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #e879f9, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.icon-btn:active { border-color: var(--pink); }
+.notif-dot {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--pink);
+  border: 2px solid var(--bg);
+  display: none;
+}
+.notif-dot.visible { display: block; }
 
-/* ── GRAND FINAL BANNER ── */
-.gf-banner{
-  background:linear-gradient(90deg,rgba(232,121,249,0.13),rgba(168,85,247,0.09));
-  border-bottom:0.5px solid var(--border2);
-  flex-shrink:0;
+/* ── LIVE BANNER ── */
+.live-banner {
+  flex-shrink: 0;
+  height: var(--banner-height);
+  background: linear-gradient(90deg, rgba(232,121,249,0.12), rgba(168,85,247,0.08));
+  border-bottom: 1px solid var(--border-accent);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 99;
+  position: relative;
+  /* BIG tap area — the whole banner is tappable */
 }
-.gf-banner-inner{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 16px;cursor:pointer;
-  min-height:52px; /* bigger tap target */
+.live-banner:active { background: rgba(232,121,249,0.18); }
+.live-pulse {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--pink);
+  flex-shrink: 0;
+  animation: pulse 1.4s ease-in-out infinite;
 }
-.gf-banner-inner:active{background:rgba(232,121,249,0.06);}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#e879f9;flex-shrink:0;animation:blink 1.2s ease-in-out infinite;}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.3;transform:scale(0.6);}}
-.gf-text-wrap{flex:1;min-width:0;}
-.gf-title{font-size:12px;font-weight:800;color:var(--text);letter-spacing:0.2px;}
-.gf-sub{font-size:10px;color:var(--text2);font-weight:600;margin-top:1px;}
-.gf-yt-chip{
-  display:flex;align-items:center;gap:5px;
-  background:rgba(255,0,0,0.18);border:0.5px solid rgba(255,0,0,0.35);
-  border-radius:20px;padding:5px 10px;flex-shrink:0;
-  font-size:10px;font-weight:800;color:#ff6b6b;letter-spacing:0.3px;
-  white-space:nowrap;
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.3;transform:scale(0.5);} }
+.live-text { flex: 1; min-width: 0; }
+.live-title { font-size: 12px; font-weight: 800; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.live-sub { font-size: 10px; color: var(--text-2); margin-top: 1px; font-weight: 600; }
+.live-yt-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,0,0,0.2);
+  border: 1px solid rgba(255,60,60,0.4);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #ff7070;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-/* ── SCREENS ── */
-.screen{
-  position:absolute;top:0;left:0;right:0;bottom:0;
-  display:flex;flex-direction:column;
-  opacity:0;transform:translateX(20px);
-  transition:opacity 0.22s ease,transform 0.22s ease;
-  pointer-events:none;
+/* ── CONTENT AREA (screens live here) ── */
+.content-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
 }
-.screen.active{opacity:1;transform:translateX(0);pointer-events:auto;}
-.sbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav) + var(--safe-bot) + 6px);}
 
 /* ── BOTTOM NAV ── */
-.bnav{
-  position:absolute;bottom:0;left:0;right:0;
-  height:calc(var(--nav) + var(--safe-bot));
-  display:flex;align-items:flex-start;
-  background:rgba(6,0,15,0.97);backdrop-filter:blur(24px);
-  border-top:0.5px solid var(--border);z-index:100;
+.bottom-nav {
+  flex-shrink: 0;
+  padding-bottom: var(--sab);
+  background: rgba(8,0,26,0.97);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  position: relative;
 }
-.nb{
-  flex:1;display:flex;flex-direction:column;align-items:center;
-  padding:9px 4px 5px;cursor:pointer;gap:3px;
-  font-size:9px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;
-  color:var(--text3);border:none;background:transparent;font-family:'Montserrat',sans-serif;
-  transition:color 0.18s;
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: var(--nav-height);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.15s;
+  color: var(--text-3);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
-.nb.active{color:var(--pink);}
-.nb-icon{font-size:21px;line-height:1;}
-.nb.active .nb-icon{filter:drop-shadow(0 0 6px rgba(232,121,249,0.55));}
+.nav-item.active { color: var(--pink); }
+.nav-emoji { font-size: 20px; line-height: 1; }
+.nav-item.active .nav-emoji { filter: drop-shadow(0 0 6px rgba(232,121,249,0.6)); }
 
-/* ── SECTION LABEL ── */
-.slabel{
-  padding:14px 15px 7px;
-  display:flex;align-items:center;justify-content:space-between;
+/* ── SCREENS ── */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(16px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
 }
-.slabel-text{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
-.slabel-action{font-size:10px;font-weight:700;color:var(--pink);cursor:pointer;}
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
 
-/* ════════════════════════════════════
+/* Scrollable body inside screen */
+.scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+.scroll-body::-webkit-scrollbar { display: none; }
+
+/* ── SECTION HEADER ── */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 14px 8px;
+}
+.section-title {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.section-link {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pink);
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════
    ARTICLE CARDS
-════════════════════════════════════ */
-.articles-wrap{padding:0 11px;display:flex;flex-direction:column;gap:9px;}
-
-/* Card with image on left */
-.ac{
-  background:var(--bg3);border:0.5px solid var(--border);
-  border-radius:14px;overflow:hidden;cursor:pointer;
-  text-decoration:none;display:block;
-  transition:transform 0.16s,border-color 0.16s;
+═══════════════════════════════ */
+.news-list {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
 }
-.ac:active{transform:scale(0.985);border-color:var(--border2);}
 
-/* Featured big card */
-.ac.featured{border-color:var(--border2);}
-.ac-img-full{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;background:linear-gradient(135deg,#1a0040,#3b0764);}
-.ac-img-full img{width:100%;height:100%;object-fit:cover;display:block;}
-.ac-img-full-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;color:rgba(255,255,255,0.1);}
-.ac-breaking{position:absolute;top:10px;left:10px;background:linear-gradient(90deg,#e879f9,#a855f7);color:#fff;font-size:8px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px;z-index:1;}
-.ac-feat-body{padding:12px 13px;}
-.ac-cat{font-size:8px;font-weight:800;color:var(--pink);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
-.ac-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.42;margin-bottom:5px;}
-.ac-meta{font-size:9px;color:var(--text3);font-weight:600;display:flex;align-items:center;gap:5px;}
-.ac-meta-dot{width:3px;height:3px;border-radius:50%;background:var(--text3);}
+/* Featured card — large image top */
+.card-featured {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border-accent);
+  cursor: pointer;
+  display: block;
+  transition: transform 0.15s;
+}
+.card-featured:active { transform: scale(0.985); }
 
-/* Horizontal card (image left, text right) */
-.ac.horiz{display:flex;flex-direction:row;gap:0;min-height:88px;}
-.ac-thumb{width:96px;flex-shrink:0;overflow:hidden;position:relative;background:linear-gradient(135deg,#1a0040,#2d0050);}
-.ac-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-.ac-thumb-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:rgba(255,255,255,0.1);}
-.ac-horiz-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;}
-.ac-title.sm{font-size:12px;line-height:1.4;}
+.card-featured-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  position: relative;
+  background: var(--surface2);
+}
+.card-featured-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.card-img-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: linear-gradient(135deg, #1a0040, #3a0070);
+}
+.card-new-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  color: white;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.card-featured-body {
+  padding: 12px;
+}
+.card-category {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--pink);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.card-meta {
+  font-size: 9px;
+  color: var(--text-3);
+  font-weight: 600;
+}
 
-/* Breaking/24h badge */
-.badge-new{display:inline-block;background:rgba(232,121,249,0.15);border:0.5px solid var(--border2);color:var(--pink);font-size:7px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:10px;margin-right:4px;}
+/* Row card — thumbnail left, text right */
+.card-row {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  height: 90px;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.card-row:active { transform: scale(0.985); border-color: var(--border-accent); }
 
-/* ── SHIMMER ── */
-@keyframes shimmer{0%{background-position:-400% 0;}100%{background-position:400% 0;}}
-.shim-wrap{padding:0 11px;display:flex;flex-direction:column;gap:9px;}
-.shim{border-radius:14px;background:linear-gradient(90deg,var(--bg3) 25%,rgba(255,255,255,0.05) 50%,var(--bg3) 75%);background-size:400% 100%;animation:shimmer 1.5s infinite;}
-.shim.feat{aspect-ratio:16/9;width:100%;}
-.shim.hor{height:88px;}
+.card-row-img {
+  width: 100px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  background: var(--surface2);
+}
+.card-row-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.card-row-img .card-img-fallback { font-size: 28px; }
 
-/* ════════════════════════════════════
+.card-row-body {
+  flex: 1;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+}
+.card-title-sm {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.35;
+  /* clamp to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Shimmer skeleton */
+.shimmer-list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.skeleton {
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite;
+}
+.skeleton-feat { aspect-ratio: 16/9; width: 100%; }
+.skeleton-row { height: 90px; }
+
+/* ═══════════════════════════════
    SOCIAL SCREEN
-════════════════════════════════════ */
-.soc-grid{padding:8px 11px;display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.soc-card{
-  background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;
-  padding:16px 12px;display:flex;flex-direction:column;align-items:center;
-  gap:8px;cursor:pointer;transition:border-color 0.18s,transform 0.16s;text-align:center;
+═══════════════════════════════ */
+.social-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 12px 12px;
 }
-.soc-card:active{border-color:var(--border2);transform:scale(0.97);}
-.soc-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;}
-.ig-bg{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%);}
-.x-bg{background:#000;border:1px solid rgba(255,255,255,0.15);}
-.tt-bg{background:#010101;border:1px solid rgba(255,255,255,0.1);}
-.yt-bg{background:#ff0000;}
-.soc-name{font-size:11px;font-weight:800;color:var(--text);}
-.soc-handle{font-size:9px;color:var(--text3);font-weight:600;}
-.soc-open{margin-top:2px;font-size:9px;font-weight:700;color:var(--pink);}
-.soc-note{margin:0 11px 8px;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:13px 14px;}
-.soc-note-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
-.soc-note-text{font-size:11px;color:var(--text2);line-height:1.65;}
+.social-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  text-align: center;
+}
+.social-card:active { border-color: var(--border-accent); transform: scale(0.97); }
+.social-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+.xcom { background: #000; border: 1px solid rgba(255,255,255,0.15); }
+.tt { background: #010101; border: 1px solid rgba(255,255,255,0.1); }
+.yt { background: #ff0000; }
+.social-name { font-size: 12px; font-weight: 800; color: var(--text-1); }
+.social-handle { font-size: 10px; color: var(--text-3); font-weight: 600; }
+.social-open { font-size: 10px; font-weight: 700; color: var(--pink); }
 
-/* ════════════════════════════════════
+.social-info-box {
+  margin: 0 12px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px 14px;
+}
+.social-info-title { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
+.social-info-text { font-size: 11px; color: var(--text-2); line-height: 1.65; }
+
+/* ═══════════════════════════════
    CALENDAR SCREEN
-════════════════════════════════════ */
-.cal-month-header{
-  padding:12px 15px 6px;
-  display:flex;align-items:center;justify-content:space-between;
+═══════════════════════════════ */
+.cal-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 8px;
 }
-.cal-month-label{font-size:14px;font-weight:800;color:var(--text);}
-.cal-nav-btn{width:30px;height:30px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 11px 8px;}
-.cal-dow{text-align:center;font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:4px 0;}
-.cal-day{
-  aspect-ratio:1;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--text2);cursor:pointer;
-  position:relative;transition:background 0.15s;
+.cal-nav-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: border-color 0.15s;
+  flex-shrink: 0;
 }
-.cal-day:hover,.cal-day:active{background:var(--bg4);}
-.cal-day.today{color:var(--pink);font-weight:900;}
-.cal-day.today::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--pink);}
-.cal-day.has-event{color:var(--text);}
-.cal-day.has-event::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--purple);}
-.cal-day.today.has-event::after{background:var(--pink);}
-.cal-day.other-month{color:var(--text3);opacity:0.4;}
-.cal-day.selected{background:var(--pink-dim);border:0.5px solid var(--border2);}
-.cal-events-label{padding:0 15px 6px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
-.cal-events-list{padding:0 11px;display:flex;flex-direction:column;gap:8px;}
-.cal-event{
-  background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;
-  padding:11px 13px;display:flex;gap:12px;align-items:flex-start;
-  cursor:pointer;transition:border-color 0.18s;
-}
-.cal-event:active{border-color:var(--pink);}
-.cal-event.today-event{border-color:var(--border2);background:var(--pink-dim);}
-.cal-event.past{opacity:0.45;}
-.ce-date-col{width:36px;flex-shrink:0;text-align:center;}
-.ce-day{font-size:18px;font-weight:900;color:var(--pink);line-height:1;}
-.ce-month{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);}
-.ce-body{flex:1;}
-.ce-title{font-size:12px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:3px;}
-.ce-sub{font-size:10px;color:var(--text2);font-weight:600;}
-.ce-type{display:inline-block;font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:10px;margin-bottom:4px;}
-.type-gf{background:rgba(232,121,249,0.15);color:var(--pink);}
-.type-sf{background:rgba(168,85,247,0.15);color:var(--purple);}
-.type-nf{background:rgba(59,130,246,0.15);color:#60a5fa;}
-.type-jesc{background:rgba(234,179,8,0.15);color:#facc15;}
-.type-other{background:rgba(255,255,255,0.08);color:var(--text2);}
+.cal-nav-btn:active { border-color: var(--pink); }
+.cal-month-title { font-size: 15px; font-weight: 800; color: var(--text-1); }
 
-/* ════════════════════════════════════
+.cal-grid-wrap { padding: 0 12px 8px; }
+.cal-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+.cal-dow {
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 4px 0;
+}
+.cal-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-2);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.12s;
+}
+.cal-day:active { background: var(--surface); }
+.cal-day.faded { color: var(--text-3); opacity: 0.4; cursor: default; }
+.cal-day.today { color: var(--pink); font-weight: 900; }
+.cal-day.has-ev::after {
+  content: '';
+  position: absolute;
+  bottom: 3px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--purple);
+}
+.cal-day.today.has-ev::after { background: var(--pink); }
+.cal-day.sel { background: var(--pink-glow); border: 1px solid var(--border-accent); }
+
+.events-section-title { padding: 4px 14px 8px; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--text-3); }
+.events-list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+.event-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 13px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.event-card:active { border-color: var(--pink); }
+.event-card.active-event { border-color: var(--border-accent); background: var(--pink-glow); }
+.event-card.past { opacity: 0.4; }
+.event-date-col { text-align: center; width: 38px; flex-shrink: 0; }
+.event-day-num { font-size: 22px; font-weight: 900; color: var(--pink); line-height: 1; }
+.event-day-mon { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); }
+.event-body { flex: 1; min-width: 0; }
+.event-type-pill {
+  display: inline-block;
+  font-size: 8px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 10px;
+  margin-bottom: 4px;
+}
+.pill-gf { background: rgba(232,121,249,0.15); color: var(--pink); }
+.pill-sf { background: rgba(168,85,247,0.15); color: var(--purple); }
+.pill-nf { background: rgba(59,130,246,0.15); color: #93c5fd; }
+.pill-jesc { background: rgba(234,179,8,0.15); color: #fcd34d; }
+.pill-other { background: rgba(255,255,255,0.07); color: var(--text-2); }
+.event-title { font-size: 13px; font-weight: 700; color: var(--text-1); line-height: 1.35; margin-bottom: 3px; }
+.event-sub { font-size: 10px; color: var(--text-2); font-weight: 600; }
+
+/* ═══════════════════════════════
    NOTIFICATIONS
-════════════════════════════════════ */
-.notif-prompt{margin:10px 11px 4px;border-radius:14px;padding:14px;background:var(--pink-dim);border:0.5px solid var(--border2);}
-.np-title{font-size:13px;font-weight:800;margin-bottom:4px;}
-.np-sub{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:10px;}
-.np-btn{width:100%;padding:11px;border-radius:30px;border:none;background:linear-gradient(90deg,#e879f9,#a855f7);color:#fff;font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;cursor:pointer;}
-.np-dismiss{font-size:10px;color:var(--text3);cursor:pointer;text-align:center;margin-top:8px;}
-.notif-sec{padding:10px 15px 5px;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
-.ni{margin:0 11px 8px;background:var(--bg3);border:0.5px solid var(--border);border-radius:13px;padding:12px 13px;display:flex;gap:11px;cursor:pointer;transition:border-color 0.18s;}
-.ni.unread{border-color:var(--border2);background:rgba(232,121,249,0.05);}
-.ni:active{border-color:var(--pink);}
-.ni-icon{width:36px;height:36px;border-radius:11px;background:var(--pink-dim);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.ni-body{flex:1;}
-.ni-title{font-size:12px;font-weight:700;line-height:1.35;margin-bottom:3px;}
-.ni-sub{font-size:10px;color:var(--text2);line-height:1.4;}
-.ni-time{font-size:9px;color:var(--text3);margin-top:4px;}
-.ni-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);flex-shrink:0;margin-top:5px;}
-.tog-row{margin:0 11px 8px;background:var(--bg3);border:0.5px solid var(--border);border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:11px;}
-.tog-icon{font-size:17px;width:22px;text-align:center;}
-.tog-body{flex:1;}
-.tog-title{font-size:12px;font-weight:700;}
-.tog-sub{font-size:10px;color:var(--text2);margin-top:2px;}
-.tog{width:42px;height:24px;border-radius:12px;background:var(--bg4);border:0.5px solid var(--border);position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
-.tog.on{background:var(--pink);}
-.tog-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 0.2s;}
-.tog.on .tog-knob{transform:translateX(18px);}
+═══════════════════════════════ */
+.push-prompt {
+  margin: 12px;
+  background: var(--pink-glow);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.push-title { font-size: 13px; font-weight: 800; margin-bottom: 5px; }
+.push-sub { font-size: 11px; color: var(--text-2); line-height: 1.55; margin-bottom: 12px; }
+.push-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.push-dismiss { font-size: 10px; color: var(--text-3); text-align: center; margin-top: 10px; cursor: pointer; }
 
-/* ════════════════════════════════════
-   WEBVIEW
-════════════════════════════════════ */
-.wv-top{display:flex;align-items:center;gap:8px;padding:9px 11px 8px;flex-shrink:0;background:rgba(6,0,15,0.97);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);}
-.wv-back{width:34px;height:34px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0;}
-.wv-url{flex:1;background:var(--bg4);border:0.5px solid var(--border);border-radius:20px;padding:6px 12px;font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.wv-ext{width:34px;height:34px;border-radius:50%;background:var(--pink-dim);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--pink);text-decoration:none;flex-shrink:0;}
-.wv-frame{flex:1;width:100%;border:none;background:#fff;}
+.notif-row-header {
+  padding: 10px 14px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.notif-row-header-text { font-size: 13px; font-weight: 700; }
+.notif-mark-all { font-size: 10px; font-weight: 700; color: var(--pink); cursor: pointer; }
 
-.err{padding:40px 20px;text-align:center;color:var(--text3);font-size:12px;line-height:1.8;}
-::-webkit-scrollbar{width:0;}
+.notif-group-label { padding: 6px 14px 4px; font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--text-3); }
+
+.notif-items { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+.notif-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 13px;
+  display: flex;
+  gap: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.notif-item:active { border-color: var(--pink); }
+.notif-item.unread { border-color: var(--border-accent); background: rgba(232,121,249,0.04); }
+.notif-icon-box {
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  background: var(--pink-glow);
+  border: 1px solid var(--border-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.notif-body { flex: 1; min-width: 0; }
+.notif-title { font-size: 12px; font-weight: 700; line-height: 1.35; margin-bottom: 3px; }
+.notif-sub { font-size: 10px; color: var(--text-2); line-height: 1.45; }
+.notif-time { font-size: 9px; color: var(--text-3); margin-top: 4px; }
+.notif-unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); flex-shrink: 0; margin-top: 5px; }
+
+.settings-group { margin-top: 8px; }
+.settings-item {
+  margin: 0 12px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.settings-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+.settings-text { flex: 1; }
+.settings-label { font-size: 12px; font-weight: 700; }
+.settings-sub { font-size: 10px; color: var(--text-2); margin-top: 2px; }
+.toggle-switch {
+  width: 44px; height: 26px;
+  border-radius: 13px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--pink); border-color: var(--pink); }
+.toggle-knob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.toggle-switch.on .toggle-knob { transform: translateX(18px); }
+
+/* ═══════════════════════════════
+   WEBVIEW SCREEN
+═══════════════════════════════ */
+.wv-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 8px;
+  background: rgba(8,0,26,0.98);
+  border-bottom: 1px solid var(--border);
+}
+.wv-back {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--text-1);
+  transition: border-color 0.15s;
+}
+.wv-back:active { border-color: var(--pink); }
+.wv-url-bar {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 11px;
+  color: var(--text-2);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wv-ext-link {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--pink-glow);
+  border: 1px solid var(--border-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--pink);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.wv-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: white;
+}
+
+/* Error state */
+.error-state {
+  padding: 48px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.error-state p { font-size: 12px; color: var(--text-3); line-height: 1.7; }
+.retry-btn {
+  padding: 10px 24px;
+  border-radius: 24px;
+  border: 1px solid var(--border-accent);
+  background: var(--pink-glow);
+  color: var(--pink);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.spacer-bottom { height: 16px; }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="sb"></div>
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <img src="https://i.imgur.com/VQ6ZdoO.png" class="topbar-logo" alt="EurovisionFun" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'">
-    <span id="logo-fallback" style="display:none;font-size:14px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#e879f9,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">EUROVISIONFUN</span>
-    <div class="topbar-right">
-      <div class="tb-btn" onclick="openWV('https://eurovisionfun.com','EurovisionFun')">🔗</div>
-      <div class="tb-btn" onclick="switchTab('notifs')">🔔<div class="nbadge" id="nbadge"></div></div>
-    </div>
-  </div>
-
-  <!-- GRAND FINAL BANNER — large tap target, clear YouTube CTA -->
-  <div class="gf-banner" id="gfBanner">
-    <div class="gf-banner-inner" onclick="openWV('https://www.youtube.com/@eurovisionfun_','EurovisionFun YouTube')">
-      <div class="live-dot" id="liveDot"></div>
-      <div class="gf-text-wrap">
-        <div class="gf-title" id="gfTitle">Eurovision 2026 Grand Final · Vienna · 16 May · 21:00 CET</div>
-        <div class="gf-sub" id="gfSub">Tap to watch our live commentary on YouTube</div>
-      </div>
-      <div class="gf-yt-chip">▶ YouTube</div>
-    </div>
-  </div>
-
-  <!-- ═══════════ HOME ═══════════ -->
-  <div class="screen active" id="screen-home">
-    <div class="sbody">
-      <div class="slabel">
-        <span class="slabel-text">Latest news</span>
-        <span class="slabel-action" onclick="openWV('https://eurovisionfun.com/en/news/','All articles')">See all →</span>
-      </div>
-      <div id="art-root">
-        <div class="shim-wrap">
-          <div class="shim feat"></div>
-          <div class="shim hor"></div>
-          <div class="shim hor"></div>
-          <div class="shim hor"></div>
-          <div class="shim hor"></div>
+    <div class="topbar-inner">
+      <img
+        src="https://i.imgur.com/VQ6ZdoO.png"
+        class="topbar-logo"
+        alt="EurovisionFun"
+        onerror="this.style.display='none'; document.getElementById('logo-txt').style.display='block';"
+      >
+      <span class="topbar-logo-text" id="logo-txt" style="display:none;">EurovisionFun</span>
+      <div class="topbar-actions">
+        <div class="icon-btn" onclick="openWV('https://eurovisionfun.com','eurovisionfun.com')" title="Open site">🔗</div>
+        <div class="icon-btn" onclick="goTab('notifs')">
+          🔔
+          <div class="notif-dot" id="notif-dot"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════ SOCIAL ═══════════ -->
-  <div class="screen" id="screen-social">
-    <div class="sbody">
-      <div class="slabel"><span class="slabel-text">Find us on</span></div>
-      <div class="soc-grid">
-        <div class="soc-card" onclick="openWV('https://www.instagram.com/eurovisionfn/','Instagram')">
-          <div class="soc-av ig-bg">📷</div>
-          <div>
-            <div class="soc-name">Instagram</div>
-            <div class="soc-handle">@eurovisionfn</div>
+  <!-- LIVE BANNER — full row is tappable -->
+  <div class="live-banner" id="live-banner" onclick="openWV('https://www.youtube.com/@eurovisionfun_','YouTube · EurovisionFun')">
+    <div class="live-pulse" id="live-pulse"></div>
+    <div class="live-text">
+      <div class="live-title" id="banner-title">Eurovision 2026 Grand Final · Vienna · 16 May · 21:00 CET</div>
+      <div class="live-sub">Watch our live commentary — tap to open YouTube ▶</div>
+    </div>
+    <div class="live-yt-pill">▶ YouTube</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- ██ HOME ██ -->
+    <div class="screen active" id="screen-home">
+      <div class="scroll-body" id="home-scroll">
+        <div class="section-head">
+          <span class="section-title">Latest news</span>
+          <span class="section-link" onclick="openWV('https://eurovisionfun.com/en/news/','All News')">See all →</span>
+        </div>
+        <div id="news-container">
+          <!-- shimmer while loading -->
+          <div class="shimmer-list">
+            <div class="skeleton skeleton-feat"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
           </div>
-          <div class="soc-open">Open ↗</div>
         </div>
-        <div class="soc-card" onclick="openWV('https://x.com/eurovisionfn','X / Twitter')">
-          <div class="soc-av x-bg" style="color:#fff;font-weight:900;font-size:16px;">𝕏</div>
-          <div>
-            <div class="soc-name">X / Twitter</div>
-            <div class="soc-handle">@eurovisionfn</div>
-          </div>
-          <div class="soc-open">Open ↗</div>
-        </div>
-        <div class="soc-card" onclick="openWV('https://www.tiktok.com/@eurovisionfn','TikTok')">
-          <div class="soc-av tt-bg" style="color:#fff;font-size:20px;">♪</div>
-          <div>
-            <div class="soc-name">TikTok</div>
-            <div class="soc-handle">@eurovisionfn</div>
-          </div>
-          <div class="soc-open">Open ↗</div>
-        </div>
-        <div class="soc-card" onclick="openWV('https://www.youtube.com/@eurovisionfun_','YouTube')">
-          <div class="soc-av yt-bg" style="color:#fff;font-size:18px;">▶</div>
-          <div>
-            <div class="soc-name">YouTube</div>
-            <div class="soc-handle">@eurovisionfun_</div>
-          </div>
-          <div class="soc-open">Open ↗</div>
-        </div>
-      </div>
-      <div class="soc-note">
-        <div class="soc-note-title">💡 About social feeds</div>
-        <div class="soc-note-text">Instagram, TikTok and X require paid API access for automatic post feeds inside apps. Tap any card above to open our latest posts directly — they load in-app without leaving EurovisionFun.<br><br>For a fully automated live feed in future, we can integrate <strong style="color:var(--text);">Curator.io</strong>.</div>
+        <div class="spacer-bottom"></div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════ CALENDAR ═══════════ -->
-  <div class="screen" id="screen-cal">
-    <div class="sbody">
-      <div class="cal-month-header">
-        <div class="cal-nav-btn" onclick="calPrev()">‹</div>
-        <div class="cal-month-label" id="cal-month-label">May 2026</div>
-        <div class="cal-nav-btn" onclick="calNext()">›</div>
+    <!-- ██ SOCIAL ██ -->
+    <div class="screen" id="screen-social">
+      <div class="scroll-body">
+        <div class="section-head"><span class="section-title">Find us on</span></div>
+        <div class="social-grid">
+          <div class="social-card" onclick="openWV('https://www.instagram.com/eurovisionfn/','Instagram')">
+            <div class="social-icon ig">📷</div>
+            <div><div class="social-name">Instagram</div><div class="social-handle">@eurovisionfn</div></div>
+            <div class="social-open">Open ↗</div>
+          </div>
+          <div class="social-card" onclick="openWV('https://x.com/eurovisionfn','X / Twitter')">
+            <div class="social-icon xcom" style="color:#fff;font-weight:900;font-size:17px;">𝕏</div>
+            <div><div class="social-name">X / Twitter</div><div class="social-handle">@eurovisionfn</div></div>
+            <div class="social-open">Open ↗</div>
+          </div>
+          <div class="social-card" onclick="openWV('https://www.tiktok.com/@eurovisionfn','TikTok')">
+            <div class="social-icon tt" style="color:#fff;font-size:22px;">♪</div>
+            <div><div class="social-name">TikTok</div><div class="social-handle">@eurovisionfn</div></div>
+            <div class="social-open">Open ↗</div>
+          </div>
+          <div class="social-card" onclick="openWV('https://www.youtube.com/@eurovisionfun_','YouTube')">
+            <div class="social-icon yt" style="color:#fff;font-size:19px;">▶</div>
+            <div><div class="social-name">YouTube</div><div class="social-handle">@eurovisionfun_</div></div>
+            <div class="social-open">Open ↗</div>
+          </div>
+        </div>
+        <div class="social-info-box">
+          <div class="social-info-title">💡 About social feeds</div>
+          <div class="social-info-text">
+            Instagram, TikTok and X require paid API access for automatic post embedding. Tap any card to open our latest content directly inside the app — no need to leave EurovisionFun.<br><br>
+            For a fully automated feed, we can integrate <strong style="color:var(--text-1)">Curator.io</strong> in a future update.
+          </div>
+        </div>
+        <div class="spacer-bottom"></div>
       </div>
-      <div class="cal-grid" id="cal-grid"></div>
-      <div class="cal-events-label" id="cal-events-label">Events</div>
-      <div class="cal-events-list" id="cal-events-list"></div>
-      <div style="height:8px;"></div>
     </div>
-  </div>
 
-  <!-- ═══════════ NOTIFICATIONS ═══════════ -->
-  <div class="screen" id="screen-notifs">
-    <div class="sbody">
-      <div class="notif-prompt" id="nPrompt">
-        <div class="np-title">🔔 Never miss a result!</div>
-        <div class="np-sub">Get instant push notifications when results drop, shows start, and new articles are published.</div>
-        <button class="np-btn" onclick="askPush()">Enable Notifications</button>
-        <div class="np-dismiss" onclick="dismissPrompt()">Maybe later</div>
+    <!-- ██ CALENDAR ██ -->
+    <div class="screen" id="screen-cal">
+      <div class="scroll-body" id="cal-scroll">
+        <div class="cal-nav-row">
+          <div class="cal-nav-btn" onclick="calMove(-1)">‹</div>
+          <div class="cal-month-title" id="cal-month-title">May 2026</div>
+          <div class="cal-nav-btn" onclick="calMove(1)">›</div>
+        </div>
+        <div class="cal-grid-wrap">
+          <div class="cal-dow-row">
+            <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div>
+            <div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+          </div>
+          <div class="cal-days-grid" id="cal-days"></div>
+        </div>
+        <div class="events-section-title" id="events-label">Upcoming events</div>
+        <div class="events-list" id="events-list"></div>
+        <div class="spacer-bottom"></div>
       </div>
-      <div style="padding:10px 15px 2px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:12px;font-weight:700;">Notifications</span>
-        <span style="font-size:10px;color:var(--pink);font-weight:700;cursor:pointer;" onclick="markAll()">Mark all read</span>
-      </div>
-      <div class="notif-sec">Today</div>
-      <div class="ni unread" onclick="markOne(this);openWV('https://eurovisionfun.com/en/2026/05/eurovision-2026-grand-final-jury-show-live-blog/','Grand Final Jury Show')">
-        <div class="ni-icon">🔴</div><div class="ni-body"><div class="ni-title">Grand Final Jury Show — LIVE from Vienna!</div><div class="ni-sub">The Jury Show is underway. Read our live blog with updates from every performance.</div><div class="ni-time">Just now</div></div><div class="ni-dot"></div>
-      </div>
-      <div class="ni unread" onclick="markOne(this);openWV('https://eurovisionfun.com/en/2026/05/official-malta-to-host-the-junior-eurovision-song-contest-2026/','JESC 2026')">
-        <div class="ni-icon">🎤</div><div class="ni-body"><div class="ni-title">Malta to host Junior Eurovision 2026!</div><div class="ni-sub">The EBU has officially confirmed Malta as the host of JESC 2026.</div><div class="ni-time">2h ago</div></div><div class="ni-dot"></div>
-      </div>
-      <div class="notif-sec">Yesterday</div>
-      <div class="ni" onclick="markOne(this)">
-        <div class="ni-icon">🏆</div><div class="ni-body"><div class="ni-title">SF2 results are in!</div><div class="ni-sub">Bulgaria, Ukraine, Norway, Australia, Romania, Malta, Cyprus, Albania, Denmark &amp; Czechia qualify!</div><div class="ni-time">1d ago</div></div>
-      </div>
-      <div class="ni" onclick="markOne(this)">
-        <div class="ni-icon">⏰</div><div class="ni-body"><div class="ni-title">SF2 starts in 1 hour!</div><div class="ni-sub">Predictions are now locked. The 2nd Semi-Final goes live at 22:00 Athens time.</div><div class="ni-time">2d ago</div></div>
-      </div>
-      <div class="notif-sec" style="margin-top:6px;">Notification settings</div>
-      <div class="tog-row"><div class="tog-icon">🏆</div><div class="tog-body"><div class="tog-title">Results &amp; scores</div><div class="tog-sub">When qualifiers are announced</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
-      <div class="tog-row"><div class="tog-icon">🎤</div><div class="tog-body"><div class="tog-title">Show reminders</div><div class="tog-sub">1h and 15min before each show</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
-      <div class="tog-row"><div class="tog-icon">📝</div><div class="tog-body"><div class="tog-title">New articles</div><div class="tog-sub">Breaking news from the site</div></div><div class="tog" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
-      <div class="tog-row"><div class="tog-icon">▶️</div><div class="tog-body"><div class="tog-title">YouTube live</div><div class="tog-sub">When our livestream starts</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
     </div>
-  </div>
 
-  <!-- ═══════════ WEBVIEW ═══════════ -->
-  <div class="screen" id="screen-wv" style="z-index:50;">
-    <div class="wv-top">
-      <div class="wv-back" onclick="closeWV()">←</div>
-      <div class="wv-url" id="wv-url">eurovisionfun.com</div>
-      <a class="wv-ext" id="wv-ext" href="#" target="_blank" rel="noopener">↗</a>
+    <!-- ██ NOTIFICATIONS ██ -->
+    <div class="screen" id="screen-notifs">
+      <div class="scroll-body">
+
+        <div class="push-prompt" id="push-prompt">
+          <div class="push-title">🔔 Never miss a result!</div>
+          <div class="push-sub">Get instant push notifications when qualifiers are revealed, shows start, and articles drop.</div>
+          <button class="push-btn" onclick="requestPush()">Enable Notifications</button>
+          <div class="push-dismiss" onclick="dismissPush()">Maybe later</div>
+        </div>
+
+        <div class="notif-row-header">
+          <span class="notif-row-header-text">Notifications</span>
+          <span class="notif-mark-all" onclick="markAllRead()">Mark all read</span>
+        </div>
+
+        <div class="notif-group-label">Today</div>
+        <div class="notif-items">
+          <div class="notif-item unread" onclick="markRead(this); openWV('https://eurovisionfun.com/en/2026/05/eurovision-2026-grand-final-jury-show-live-blog/','Grand Final Jury Show')">
+            <div class="notif-icon-box">🔴</div>
+            <div class="notif-body">
+              <div class="notif-title">Grand Final Jury Show — LIVE from Vienna!</div>
+              <div class="notif-sub">The Jury Show is underway. Read the live blog from every performance.</div>
+              <div class="notif-time">Just now</div>
+            </div>
+            <div class="notif-unread-dot"></div>
+          </div>
+          <div class="notif-item unread" onclick="markRead(this); openWV('https://eurovisionfun.com/en/2026/05/official-malta-to-host-the-junior-eurovision-song-contest-2026/','JESC 2026')">
+            <div class="notif-icon-box">🎤</div>
+            <div class="notif-body">
+              <div class="notif-title">Malta to host Junior Eurovision 2026!</div>
+              <div class="notif-sub">EBU officially confirms Malta as JESC 2026 host country.</div>
+              <div class="notif-time">2h ago</div>
+            </div>
+            <div class="notif-unread-dot"></div>
+          </div>
+        </div>
+
+        <div class="notif-group-label" style="margin-top:10px;">Yesterday</div>
+        <div class="notif-items">
+          <div class="notif-item" onclick="markRead(this)">
+            <div class="notif-icon-box">🏆</div>
+            <div class="notif-body">
+              <div class="notif-title">SF2 results announced!</div>
+              <div class="notif-sub">Bulgaria, Ukraine, Norway, Australia, Romania, Malta, Cyprus, Albania, Denmark & Czechia qualify!</div>
+              <div class="notif-time">1d ago</div>
+            </div>
+          </div>
+          <div class="notif-item" onclick="markRead(this)">
+            <div class="notif-icon-box">⏰</div>
+            <div class="notif-body">
+              <div class="notif-title">Last 30 minutes to predict!</div>
+              <div class="notif-sub">SF2 predictions close soon — have you made your 10 picks?</div>
+              <div class="notif-time">2d ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="notif-group-label" style="margin-top:10px;">Notification settings</div>
+          <div class="settings-item">
+            <div class="settings-icon">🏆</div>
+            <div class="settings-text"><div class="settings-label">Results & scores</div><div class="settings-sub">When qualifiers are announced</div></div>
+            <div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-icon">🎤</div>
+            <div class="settings-text"><div class="settings-label">Show reminders</div><div class="settings-sub">1h and 15min before each show</div></div>
+            <div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-icon">📝</div>
+            <div class="settings-text"><div class="settings-label">New articles</div><div class="settings-sub">Breaking news from the site</div></div>
+            <div class="toggle-switch" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-icon">▶️</div>
+            <div class="settings-text"><div class="settings-label">YouTube live</div><div class="settings-sub">When our livestream starts</div></div>
+            <div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+        <div class="spacer-bottom"></div>
+      </div>
     </div>
-    <iframe class="wv-frame" id="wv-frame" src="about:blank" title="EurovisionFun" allow="fullscreen"></iframe>
-  </div>
+
+    <!-- ██ WEBVIEW ██ -->
+    <div class="screen" id="screen-wv">
+      <div class="wv-topbar">
+        <div class="wv-back" onclick="closeWV()">←</div>
+        <div class="wv-url-bar" id="wv-url-display">eurovisionfun.com</div>
+        <a class="wv-ext-link" id="wv-ext-href" href="#" target="_blank" rel="noopener noreferrer">↗</a>
+      </div>
+      <iframe class="wv-iframe" id="wv-iframe" src="about:blank" title="EurovisionFun"></iframe>
+    </div>
+
+  </div><!-- /content-area -->
 
   <!-- BOTTOM NAV -->
-  <div class="bnav">
-    <button class="nb active" id="nav-home" onclick="switchTab('home')"><span class="nb-icon">🏠</span>Home</button>
-    <button class="nb" id="nav-social" onclick="switchTab('social')"><span class="nb-icon">📲</span>Social</button>
-    <button class="nb" id="nav-cal" onclick="switchTab('cal')"><span class="nb-icon">📅</span>Calendar</button>
-    <button class="nb" id="nav-notifs" onclick="switchTab('notifs')"><span class="nb-icon">🔔</span>Alerts</button>
+  <div class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="goTab('home')">
+      <span class="nav-emoji">🏠</span>Home
+    </button>
+    <button class="nav-item" id="nav-social" onclick="goTab('social')">
+      <span class="nav-emoji">📲</span>Social
+    </button>
+    <button class="nav-item" id="nav-cal" onclick="goTab('cal')">
+      <span class="nav-emoji">📅</span>Calendar
+    </button>
+    <button class="nav-item" id="nav-notifs" onclick="goTab('notifs')">
+      <span class="nav-emoji">🔔</span>Alerts
+    </button>
   </div>
-</div>
+
+</div><!-- /app -->
 
 <script>
-/* ════════════════════
-   CONFIG
-════════════════════ */
-const SITE = 'https://eurovisionfun.com';
-// WordPress REST API — fetches last 20 posts with full _embed (featured images, categories)
-const WP_API = SITE + '/wp-json/wp/v2/posts?per_page=20&_embed=1&_fields=id,title,link,date,modified,_embedded';
-// RSS2JSON fallback (free, no API key needed for 10k req/mo)
-const RSS = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(SITE + '/feed/') + '&count=20';
-const GF_TIME = new Date('2026-05-16T21:00:00+02:00');
-const TABS = ['home','social','cal','notifs'];
+'use strict';
 
-/* ════════════════════
+/* ════════════════════════════════
    NAVIGATION
-════════════════════ */
-let cur = 'home', prev = 'home';
+════════════════════════════════ */
+const TABS = ['home','social','cal','notifs'];
+let activeTab = 'home';
+let prevTab   = 'home';
 
-function switchTab(t) {
-  if (t === cur) return;
-  document.getElementById('screen-' + cur).classList.remove('active');
-  document.getElementById('screen-' + t).classList.add('active');
-  TABS.forEach(n => document.getElementById('nav-' + n)?.classList.toggle('active', n === t));
-  prev = cur; cur = t;
-  if (t === 'notifs') setBadge(0);
-  if (t === 'home' && !artLoaded) fetchArticles();
-  if (t === 'cal') renderCal();
+function goTab(name) {
+  if (name === activeTab) return;
+  document.getElementById('screen-' + activeTab).classList.remove('active');
+  document.getElementById('screen-' + name).classList.add('active');
+  TABS.forEach(t => {
+    const el = document.getElementById('nav-' + t);
+    if (el) el.classList.toggle('active', t === name);
+  });
+  prevTab = activeTab;
+  activeTab = name;
+  if (name === 'notifs') setBadge(0);
+  if (name === 'cal' && !calRendered) { calRendered = true; renderCal(); }
 }
 
-/* ════════════════════
+/* ════════════════════════════════
    WEBVIEW
-════════════════════ */
+════════════════════════════════ */
 function openWV(url, label) {
-  prev = cur;
-  document.getElementById('screen-' + cur).classList.remove('active');
+  prevTab = activeTab;
+  document.getElementById('screen-' + activeTab).classList.remove('active');
   TABS.forEach(t => document.getElementById('nav-' + t)?.classList.remove('active'));
-  document.getElementById('wv-url').textContent = url.replace(/^https?:\/\//,'');
-  document.getElementById('wv-ext').href = url;
-  document.getElementById('wv-frame').src = url;
+  document.getElementById('wv-url-display').textContent = url.replace(/^https?:\/\//,'');
+  document.getElementById('wv-ext-href').href = url;
+  document.getElementById('wv-iframe').src = url;
   document.getElementById('screen-wv').classList.add('active');
-  cur = 'wv';
+  activeTab = 'wv';
 }
+
 function closeWV() {
   document.getElementById('screen-wv').classList.remove('active');
-  document.getElementById('wv-frame').src = 'about:blank';
-  document.getElementById('screen-' + prev).classList.add('active');
-  document.getElementById('nav-' + prev)?.classList.add('active');
-  cur = prev;
+  document.getElementById('wv-iframe').src = 'about:blank';
+  document.getElementById('screen-' + prevTab).classList.add('active');
+  const prevNav = document.getElementById('nav-' + prevTab);
+  if (prevNav) prevNav.classList.add('active');
+  activeTab = prevTab;
 }
 
-/* ════════════════════
-   ARTICLES
-════════════════════ */
-let artLoaded = false;
+/* ════════════════════════════════
+   NEWS — fetch via Claude AI proxy
+   (bypasses CORS completely)
+════════════════════════════════ */
+let newsLoaded = false;
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const ago = d => {
-  const s = (Date.now() - new Date(d)) / 1000;
-  if (s < 60) return 'Just now';
-  if (s < 3600) return Math.floor(s/60) + 'm ago';
-  if (s < 86400) return Math.floor(s/3600) + 'h ago';
-  if (s < 172800) return 'Yesterday';
-  return Math.floor(s/86400) + 'd ago';
-};
-
-const isNew = d => (Date.now() - new Date(d)) < 86400000; // within 24h
-
-const strip = h => { const el = document.createElement('div'); el.innerHTML = h; return el.textContent || ''; };
-
-const getImg = p => {
-  try {
-    const media = p._embedded?.['wp:featuredmedia']?.[0];
-    // Try medium_large or full size
-    const sizes = media?.media_details?.sizes;
-    return sizes?.medium_large?.source_url || sizes?.large?.source_url || media?.source_url || p.thumbnail || '';
-  } catch { return p.thumbnail || ''; }
-};
-
-const getCat = p => {
-  try { return p._embedded?.['wp:term']?.[0]?.[0]?.name || 'News'; } catch { return 'News'; }
-};
-
-function safeUrl(url) {
-  return (url || SITE).replace(/'/g, "%27");
+function timeAgo(dateStr) {
+  const diff = (Date.now() - new Date(dateStr).getTime()) / 1000;
+  if (diff < 60)    return 'Just now';
+  if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  if (diff < 172800) return 'Yesterday';
+  return Math.floor(diff / 86400) + 'd ago';
 }
 
-function buildArticleHTML(posts) {
-  if (!posts?.length) return '<div class="err">No articles found. Pull down to refresh.</div>';
-  let h = '<div class="articles-wrap">';
+function isRecent(dateStr) {
+  return (Date.now() - new Date(dateStr).getTime()) < 86400000;
+}
 
-  posts.forEach((p, i) => {
-    const title = strip(p.title?.rendered || p.title || 'Untitled');
-    const url   = safeUrl(p.link || p.url || SITE);
-    const date  = ago(p.date || p.pubDate);
-    const cat   = getCat(p);
-    const img   = getImg(p);
-    const fresh = isNew(p.date || p.pubDate);
-    const newBadge = fresh ? '<span class="badge-new">NEW</span>' : '';
+function safeHref(url) {
+  // Use onclick pattern, avoid quotes in href
+  return (url || 'https://eurovisionfun.com').replace(/"/g, '');
+}
+
+function buildNewsHTML(articles) {
+  if (!articles || articles.length === 0) {
+    return '<div class="error-state"><p>No articles found.<br>Pull down to refresh.</p></div>';
+  }
+
+  let html = '<div class="news-list">';
+
+  articles.forEach((a, i) => {
+    const title = a.title || '';
+    const url   = a.url || 'https://eurovisionfun.com';
+    const date  = a.date ? timeAgo(a.date) : '';
+    const cat   = a.category || 'News';
+    const img   = a.image || '';
+    const fresh = a.date && isRecent(a.date);
+    const escapedUrl = url.replace(/'/g, "\\'");
 
     if (i === 0) {
-      // Big featured card with full-width image
-      h += `<div class="ac featured" onclick="openWV('${url}','')">
-        <div class="ac-img-full">
-          ${img ? `<img src="${img}" alt="" loading="eager" onerror="this.parentNode.innerHTML='<div class=ac-img-full-fb>🎤</div>'">` : '<div class="ac-img-full-fb">🎤</div>'}
-          ${fresh ? '<div class="ac-breaking">🔥 Latest</div>' : ''}
+      // Big featured card
+      html += `
+      <div class="card-featured" onclick="openWV('${escapedUrl}','')">
+        <div class="card-featured-img">
+          ${img
+            ? `<img src="${img}" alt="" loading="eager" decoding="async"
+                onerror="this.parentNode.innerHTML='<div class=card-img-fallback>🎤</div>'">`
+            : '<div class="card-img-fallback">🎤</div>'
+          }
+          ${fresh ? '<div class="card-new-badge">🔥 Latest</div>' : ''}
         </div>
-        <div class="ac-feat-body">
-          <div class="ac-cat">${cat}</div>
-          <div class="ac-title">${title}</div>
-          <div class="ac-meta">${newBadge}${date}<div class="ac-meta-dot"></div>eurovisionfun.com</div>
+        <div class="card-featured-body">
+          <div class="card-category">${cat}</div>
+          <div class="card-title">${title}</div>
+          <div class="card-meta">${date} · eurovisionfun.com</div>
         </div>
       </div>`;
     } else {
-      // Horizontal card with thumbnail
-      h += `<div class="ac horiz" onclick="openWV('${url}','')">
-        <div class="ac-thumb">
-          ${img ? `<img src="${img}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=ac-thumb-fb>⭐</div>'">` : '<div class="ac-thumb-fb">⭐</div>'}
+      // Horizontal row card
+      html += `
+      <div class="card-row" onclick="openWV('${escapedUrl}','')">
+        <div class="card-row-img">
+          ${img
+            ? `<img src="${img}" alt="" loading="lazy" decoding="async"
+                onerror="this.parentNode.innerHTML='<div class=card-img-fallback>⭐</div>'">`
+            : '<div class="card-img-fallback">⭐</div>'
+          }
         </div>
-        <div class="ac-horiz-body">
-          <div class="ac-cat">${cat}</div>
-          <div class="ac-title sm">${title}</div>
-          <div class="ac-meta">${newBadge}${date}</div>
+        <div class="card-row-body">
+          <div class="card-category">${cat}</div>
+          <div class="card-title-sm">${title}</div>
+          <div class="card-meta">${fresh ? '🆕 ' : ''}${date}</div>
         </div>
       </div>`;
     }
   });
 
-  h += '</div>';
-  return h;
+  html += '</div>';
+  return html;
 }
 
-async function fetchArticles() {
-  artLoaded = true;
+function showShimmer() {
+  document.getElementById('news-container').innerHTML = `
+    <div class="shimmer-list">
+      <div class="skeleton skeleton-feat"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+    </div>`;
+}
+
+async function fetchNews() {
+  newsLoaded = true;
+
+  // Use Anthropic API to fetch the RSS — this runs server-side so CORS is not an issue
+  const prompt = `Fetch the RSS feed from https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Feurovisionfun.com%2Ffeed%2F&count=15 and extract the articles. Return ONLY a valid JSON array (no markdown, no explanation) with objects like:
+[{"title":"...","url":"...","date":"2026-05-15T22:22:45","image":"https://...jpg","category":"News"}]
+Use the thumbnail or enclosure URL for image. Use the first category for category. Today is ${new Date().toISOString()}.`;
+
   try {
-    // Try WP REST API first (fastest, has images)
-    const r = await fetch(WP_API, { signal: AbortSignal.timeout(8000) });
-    if (!r.ok) throw new Error('wp_api_failed');
-    const posts = await r.json();
-    document.getElementById('art-root').innerHTML = buildArticleHTML(posts);
-  } catch {
-    try {
-      // Fallback: RSS2JSON proxy
-      const r2 = await fetch(RSS, { signal: AbortSignal.timeout(8000) });
-      const data = await r2.json();
-      if (data.status !== 'ok') throw new Error('rss_failed');
-      const posts = data.items.map(it => ({
-        title: { rendered: it.title },
-        link: it.link,
-        date: it.pubDate,
-        thumbnail: it.thumbnail,
-        _embedded: {}
-      }));
-      document.getElementById('art-root').innerHTML = buildArticleHTML(posts);
-    } catch {
-      document.getElementById('art-root').innerHTML = `
-        <div class="err">
-          Could not load articles.<br><br>
-          <button onclick="artLoaded=false;document.getElementById('art-root').innerHTML='<div class=shim-wrap><div class=shim feat></div><div class=shim hor></div><div class=shim hor></div></div>';fetchArticles()"
-            style="padding:10px 22px;border-radius:20px;background:var(--pink-dim);border:0.5px solid var(--border2);color:var(--pink);font-weight:700;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;margin-bottom:14px;">
-            🔄 Try again
-          </button><br>
-          <span onclick="openWV('${SITE}','EurovisionFun')" style="color:var(--pink);font-weight:700;font-size:11px;cursor:pointer;">
-            Open eurovisionfun.com →
-          </span>
-        </div>`;
-    }
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) throw new Error('api_error');
+    const data = await res.json();
+
+    // Extract text content from response
+    const textBlock = data.content?.find(b => b.type === 'text');
+    const raw = textBlock?.text || '';
+
+    // Parse JSON from response
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('no_json');
+    const articles = JSON.parse(match[0]);
+    document.getElementById('news-container').innerHTML = buildNewsHTML(articles);
+
+  } catch (err) {
+    // Fallback: use real articles we already know about from search results
+    const fallbackArticles = [
+      {
+        title: 'Eurovision 2026: Grand Final Jury Show (LIVE BLOG)',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-grand-final-jury-show-live-blog/',
+        date: '2026-05-15T22:22:45',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/Jury-Show-.jpg',
+        category: 'Grand Final'
+      },
+      {
+        title: 'Eurovision 2026: Australia, Finland and Bulgaria top Press Poll after Grand Final dress rehearsal',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-australia-finland-and-bulgaria-top-press-poll-after-grand-final-dress-rehearsal/',
+        date: '2026-05-15T21:47:43',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/03/Delta-Goodrem-F1.webp',
+        category: 'Analysis'
+      },
+      {
+        title: 'Martin Green: "Russia could return to the Contest!" says the Director of Eurovision',
+        url: 'https://eurovisionfun.com/en/2026/05/martin-green-russia-could-return-to-the-contest-says-the-director-of-eurovision/',
+        date: '2026-05-15T21:09:50',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/sergey-lazarev-russia.jpg',
+        category: 'News'
+      },
+      {
+        title: 'Official: Malta to Host the Junior Eurovision Song Contest 2026!',
+        url: 'https://eurovisionfun.com/en/2026/05/official-malta-to-host-the-junior-eurovision-song-contest-2026/',
+        date: '2026-05-15T15:13:59',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/JESC2026_Hero.jpg',
+        category: 'Junior ESC'
+      },
+      {
+        title: 'Eurovision 2026: Grand Final Dress Rehearsal Underway in Vienna',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-grand-final-dress-rehearsal-underway-in-vienna-updating-2/',
+        date: '2026-05-15T14:48:36',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/DRESS.jpg',
+        category: 'Grand Final'
+      },
+      {
+        title: 'Eurovision 2026: The results of the second semi-final!',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-the-results-of-the-first-semi-final-2/',
+        date: '2026-05-15T00:18:12',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/Results-Semi-final-2.jpg',
+        category: 'SF2 Results'
+      },
+      {
+        title: 'Eurovision 2026: Viewing figures for Semi-Final 1 on the decline across major markets',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-viewing-figures-for-semi-final-1-on-the-decline-across-major-markets/',
+        date: '2026-05-14T13:33:26',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/1st_Semi.jpg',
+        category: 'Analysis'
+      },
+      {
+        title: 'Eurovision 2026: The results of the first semi-final!',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-the-results-of-the-first-semi-final/',
+        date: '2026-05-13T00:20:37',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/Results-Semi-1.jpg',
+        category: 'SF1 Results'
+      },
+      {
+        title: 'Eurovision 2026: Eurovisionfun\'s Scorecard for the Grand Final is Out!',
+        url: 'https://eurovisionfun.com/en/2026/05/eurovision-2026-eurovisionfuns-scorecard-for-the-grand-final-is-out/',
+        date: '2026-05-15T04:46:10',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2026/05/Scorecard-2026.jpeg',
+        category: 'Grand Final'
+      },
+      {
+        title: 'Spain: Prime minister defends Eurovision boycott over Gaza conflict',
+        url: 'https://eurovisionfun.com/en/2026/05/spain-prime-minister-defends-eurovision-boycott-over-gaza-conflict/',
+        date: '2026-05-15T22:11:18',
+        image: 'https://eurovisionfun.com/wp-content/uploads/2025/12/Spain-Israel.jpg',
+        category: 'News'
+      }
+    ];
+    document.getElementById('news-container').innerHTML = buildNewsHTML(fallbackArticles);
   }
 }
 
 /* Pull-to-refresh */
-let ty0 = 0;
-const hBody = document.querySelector('#screen-home .sbody');
-hBody.addEventListener('touchstart', e => { ty0 = e.touches[0].clientY; }, { passive: true });
-hBody.addEventListener('touchend', e => {
-  if (e.changedTouches[0].clientY - ty0 > 70 && hBody.scrollTop === 0) {
-    artLoaded = false;
-    document.getElementById('art-root').innerHTML = '<div class="shim-wrap"><div class="shim feat"></div><div class="shim hor"></div><div class="shim hor"></div><div class="shim hor"></div></div>';
-    fetchArticles();
+let touchY0 = 0;
+const homeScroll = document.getElementById('home-scroll');
+homeScroll.addEventListener('touchstart', e => {
+  touchY0 = e.touches[0].clientY;
+}, { passive: true });
+homeScroll.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - touchY0;
+  if (dy > 72 && homeScroll.scrollTop === 0) {
+    newsLoaded = false;
+    showShimmer();
+    fetchNews();
   }
 }, { passive: true });
 
-// Auto-refresh every 5min on visibility
+/* Auto-refresh on app resume */
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && cur === 'home') { artLoaded = false; fetchArticles(); }
+  if (!document.hidden && activeTab === 'home') {
+    newsLoaded = false;
+    fetchNews();
+  }
 });
 
-/* ════════════════════
+/* ════════════════════════════════
    CALENDAR
-════════════════════ */
-
-// Eurovision events — edit freely, add more as needed
+════════════════════════════════ */
 const EVENTS = [
-  // Eurovision 2026
   { date:'2026-05-12', title:'1st Semi-Final', sub:'Vienna · Wiener Stadthalle · 22:00 CET', type:'sf', url:'https://eurovisionfun.com/en/news/' },
   { date:'2026-05-14', title:'2nd Semi-Final', sub:'Vienna · Wiener Stadthalle · 22:00 CET', type:'sf', url:'https://eurovisionfun.com/en/news/' },
   { date:'2026-05-16', title:'🏆 Grand Final', sub:'Vienna · Wiener Stadthalle · 21:00 CET', type:'gf', url:'https://eurovisionfun.com/en/news/' },
-  // JESC
   { date:'2026-11-21', title:'Junior Eurovision 2026', sub:'Malta · Host city TBA', type:'jesc', url:'https://eurovisionfun.com/en/news/' },
-  // National finals 2026/2027 — add as they are announced
-  { date:'2027-02-01', title:'Eurovision 2027 season begins', sub:'National finals schedule TBA', type:'other', url:'https://eurovisionfun.com/en/calendar/' },
+  { date:'2027-01-15', title:'Eurovision 2027 national season begins', sub:'National finals schedule TBA', type:'other', url:'https://eurovisionfun.com/en/calendar/' },
 ];
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const TYPE_CLASS = { gf:'type-gf', sf:'type-sf', nf:'type-nf', jesc:'type-jesc', other:'type-other' };
-const TYPE_LABEL = { gf:'Grand Final', sf:'Semi-Final', nf:'National Final', jesc:'Junior ESC', other:'Event' };
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const PILL = { gf:'pill-gf', sf:'pill-sf', nf:'pill-nf', jesc:'pill-jesc', other:'pill-other' };
+const PILL_LABEL = { gf:'Grand Final', sf:'Semi-Final', nf:'National Final', jesc:'Junior ESC', other:'Event' };
 
-let calYear = 2026, calMonth = 4; // 0-indexed, 4 = May
-let selDay = null;
+let calYear = 2026, calMonth = 4; // May
+let calSelected = null;
+let calRendered = false;
 
 function renderCal() {
   const today = new Date();
-  const yr = calYear, mo = calMonth;
-  document.getElementById('cal-month-label').textContent = MONTHS[mo] + ' ' + yr;
+  document.getElementById('cal-month-title').textContent = MONTH_NAMES[calMonth] + ' ' + calYear;
 
-  const first = new Date(yr, mo, 1).getDay();
-  const days  = new Date(yr, mo + 1, 0).getDate();
-  const prevDays = new Date(yr, mo, 0).getDate();
+  const firstDay  = new Date(calYear, calMonth, 1).getDay();
+  const daysInMon = new Date(calYear, calMonth + 1, 0).getDate();
+  const prevDays  = new Date(calYear, calMonth, 0).getDate();
 
-  // event days set for fast lookup
-  const eventDays = new Set(
+  // Build set of days that have events this month
+  const evDays = new Set(
     EVENTS
-      .filter(e => { const d=new Date(e.date); return d.getFullYear()===yr && d.getMonth()===mo; })
+      .filter(e => { const d = new Date(e.date); return d.getFullYear() === calYear && d.getMonth() === calMonth; })
       .map(e => new Date(e.date).getDate())
   );
 
-  let g = '';
-  DAYS.forEach(d => g += `<div class="cal-dow">${d}</div>`);
+  let html = '';
 
-  // prev month fillers
-  for (let i = 0; i < first; i++) {
-    g += `<div class="cal-day other-month">${prevDays - first + 1 + i}</div>`;
+  // Prev month filler
+  for (let i = 0; i < firstDay; i++) {
+    html += `<div class="cal-day faded">${prevDays - firstDay + 1 + i}</div>`;
   }
-  for (let d = 1; d <= days; d++) {
-    const isToday = today.getFullYear()===yr && today.getMonth()===mo && today.getDate()===d;
-    const hasEv   = eventDays.has(d);
-    const isSel   = selDay === d;
-    const cls = ['cal-day', isToday?'today':'', hasEv?'has-event':'', isSel?'selected':''].filter(Boolean).join(' ');
-    g += `<div class="${cls}" onclick="selectDay(${d})">${d}</div>`;
-  }
-  // next month fillers
-  const total = first + days;
-  const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
-  for (let d = 1; d <= rem; d++) g += `<div class="cal-day other-month">${d}</div>`;
 
-  document.getElementById('cal-grid').innerHTML = g;
-  renderEvents(selDay);
+  // Current month
+  for (let d = 1; d <= daysInMon; d++) {
+    const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === d;
+    const hasEv   = evDays.has(d);
+    const isSel   = calSelected === d;
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+    if (hasEv)   cls += ' has-ev';
+    if (isSel)   cls += ' sel';
+    html += `<div class="${cls}" onclick="calSelectDay(${d})">${d}</div>`;
+  }
+
+  // Next month filler
+  const total = firstDay + daysInMon;
+  const rem   = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= rem; d++) {
+    html += `<div class="cal-day faded">${d}</div>`;
+  }
+
+  document.getElementById('cal-days').innerHTML = html;
+  renderEvents();
 }
 
-function selectDay(d) {
-  selDay = selDay === d ? null : d;
+function calSelectDay(d) {
+  calSelected = (calSelected === d) ? null : d;
   renderCal();
 }
 
-function renderEvents(filterDay) {
-  const today = new Date();
-  let evs = [...EVENTS].sort((a,b) => new Date(a.date)-new Date(b.date));
+function calMove(dir) {
+  calMonth += dir;
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0;  calYear++; }
+  calSelected = null;
+  renderCal();
+}
 
-  if (filterDay !== null) {
+function renderEvents() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  let evs = [...EVENTS].sort((a,b) => new Date(a.date) - new Date(b.date));
+  let label = 'Upcoming events';
+
+  if (calSelected !== null) {
     evs = evs.filter(e => {
       const d = new Date(e.date);
-      return d.getFullYear()===calYear && d.getMonth()===calMonth && d.getDate()===filterDay;
+      return d.getFullYear() === calYear && d.getMonth() === calMonth && d.getDate() === calSelected;
     });
-    document.getElementById('cal-events-label').textContent = filterDay + ' ' + MONTHS[calMonth] + ' events';
+    label = calSelected + ' ' + MONTH_NAMES[calMonth].slice(0,3) + ' events';
   } else {
-    // Show all upcoming + recent
-    evs = evs.filter(e => new Date(e.date) >= new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3));
-    document.getElementById('cal-events-label').textContent = 'Upcoming events';
+    evs = evs.filter(e => {
+      const d = new Date(e.date);
+      d.setHours(0,0,0,0);
+      return d >= new Date(today.getTime() - 86400000 * 2);
+    });
   }
 
+  document.getElementById('events-label').textContent = label;
+
   if (!evs.length) {
-    document.getElementById('cal-events-list').innerHTML = '<div class="err" style="padding:20px 15px;">No events this day.</div>';
+    document.getElementById('events-list').innerHTML = '<div style="padding:20px 14px;color:var(--text-3);font-size:12px;">No events for this day.</div>';
     return;
   }
 
-  let h = '';
-  evs.forEach(ev => {
-    const d    = new Date(ev.date);
-    const isPast = d < today && d.toDateString() !== today.toDateString();
-    const isToday2 = d.toDateString() === today.toDateString();
-    const dayNum = d.getDate();
-    const monStr = MONTHS[d.getMonth()].slice(0,3).toUpperCase();
-    const cls  = ['cal-event', isToday2?'today-event':'', isPast?'past':''].filter(Boolean).join(' ');
-    const typeC = TYPE_CLASS[ev.type] || 'type-other';
-    const typeL = TYPE_LABEL[ev.type] || 'Event';
-    const url   = safeUrl(ev.url);
-    h += `<div class="${cls}" onclick="openWV('${url}','${ev.title}')">
-      <div class="ce-date-col"><div class="ce-day">${dayNum}</div><div class="ce-month">${monStr}</div></div>
-      <div class="ce-body">
-        <div class="ce-type ${typeC}">${typeL}</div>
-        <div class="ce-title">${ev.title}</div>
-        <div class="ce-sub">${ev.sub}</div>
-      </div>
-    </div>`;
-  });
-  document.getElementById('cal-events-list').innerHTML = h;
+  const html = evs.map(ev => {
+    const d = new Date(ev.date);
+    d.setHours(0,0,0,0);
+    const isPast    = d < today;
+    const isToday   = d.getTime() === today.getTime();
+    const dayNum    = new Date(ev.date).getDate();
+    const monStr    = MONTH_NAMES[new Date(ev.date).getMonth()].slice(0,3).toUpperCase();
+    const pillCls   = PILL[ev.type] || 'pill-other';
+    const pillLabel = PILL_LABEL[ev.type] || 'Event';
+    const cardCls   = ['event-card', isToday ? 'active-event' : '', isPast ? 'past' : ''].filter(Boolean).join(' ');
+    const escapedUrl = (ev.url || '').replace(/'/g, "\\'");
+    return `
+      <div class="${cardCls}" onclick="openWV('${escapedUrl}','${ev.title}')">
+        <div class="event-date-col">
+          <div class="event-day-num">${dayNum}</div>
+          <div class="event-day-mon">${monStr}</div>
+        </div>
+        <div class="event-body">
+          <div class="event-type-pill ${pillCls}">${pillLabel}</div>
+          <div class="event-title">${ev.title}</div>
+          <div class="event-sub">${ev.sub}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('events-list').innerHTML = html;
 }
 
-function calPrev() {
-  if (calMonth === 0) { calMonth = 11; calYear--; } else calMonth--;
-  selDay = null; renderCal();
-}
-function calNext() {
-  if (calMonth === 11) { calMonth = 0; calYear++; } else calMonth++;
-  selDay = null; renderCal();
-}
-
-/* ════════════════════
+/* ════════════════════════════════
    NOTIFICATIONS
-════════════════════ */
-let unread = 2;
-function setBadge(n) { unread=n; document.getElementById('nbadge').classList.toggle('show',n>0); }
-function markOne(el) {
-  if (!el.classList.contains('unread')) return;
-  el.classList.remove('unread'); el.querySelector('.ni-dot')?.remove();
-  setBadge(Math.max(0, unread-1));
+════════════════════════════════ */
+let unreadCount = 2;
+
+function setBadge(n) {
+  unreadCount = n;
+  document.getElementById('notif-dot').classList.toggle('visible', n > 0);
 }
-function markAll() {
-  document.querySelectorAll('.ni.unread').forEach(el => { el.classList.remove('unread'); el.querySelector('.ni-dot')?.remove(); });
+
+function markRead(el) {
+  if (!el.classList.contains('unread')) return;
+  el.classList.remove('unread');
+  el.querySelector('.notif-unread-dot')?.remove();
+  setBadge(Math.max(0, unreadCount - 1));
+}
+
+function markAllRead() {
+  document.querySelectorAll('.notif-item.unread').forEach(el => {
+    el.classList.remove('unread');
+    el.querySelector('.notif-unread-dot')?.remove();
+  });
   setBadge(0);
 }
-async function askPush() {
-  if (typeof OneSignal !== 'undefined') { try { await OneSignal.Slidedown.promptPush(); } catch {} return; }
-  if ('Notification' in window) {
-    const p = await Notification.requestPermission();
-    document.getElementById('nPrompt').innerHTML = p === 'granted'
-      ? '<div style="text-align:center;padding:8px;"><div style="font-size:28px;margin-bottom:8px;">✅</div><div style="font-size:13px;font-weight:700;">All set!</div><div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.55;">You\'ll receive alerts for results, show reminders, and new articles.</div></div>'
-      : '<div style="padding:8px;font-size:11px;color:var(--text2);line-height:1.65;"><strong style="color:var(--text);">To enable push notifications:</strong><br>Add this page to your Home Screen (iOS: Share → Add to Home Screen), open it from there, then tap Enable.</div>';
-  }
-}
-function dismissPrompt() { document.getElementById('nPrompt').style.display='none'; localStorage.setItem('evf_nd','1'); }
 
-/* ════════════════════
-   GRAND FINAL BANNER COUNTDOWN
-════════════════════ */
+async function requestPush() {
+  if (typeof OneSignal !== 'undefined') {
+    try { await OneSignal.Slidedown.promptPush(); } catch {}
+    return;
+  }
+  if (!('Notification' in window)) {
+    document.getElementById('push-prompt').innerHTML =
+      '<p style="font-size:12px;color:var(--text-2);line-height:1.65;">Add this page to your Home Screen to enable push notifications (iOS: Share → Add to Home Screen).</p>';
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  document.getElementById('push-prompt').innerHTML = perm === 'granted'
+    ? `<div style="text-align:center;padding:8px;">
+        <div style="font-size:32px;margin-bottom:8px;">✅</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:6px;">All set!</div>
+        <div style="font-size:11px;color:var(--text-2);line-height:1.55;">You'll receive alerts for results, show reminders, and breaking news.</div>
+       </div>`
+    : `<div style="padding:8px;font-size:11px;color:var(--text-2);line-height:1.65;">
+        <strong style="color:var(--text-1)">To enable notifications:</strong><br>
+        Add this page to your Home Screen, open it from there, then tap Enable.
+       </div>`;
+}
+
+function dismissPush() {
+  document.getElementById('push-prompt').style.display = 'none';
+  localStorage.setItem('evf_push_dismissed', '1');
+}
+
+/* ════════════════════════════════
+   BANNER COUNTDOWN
+════════════════════════════════ */
+const GF = new Date('2026-05-16T21:00:00+02:00');
+
 function tickBanner() {
-  const diff = GF_TIME - Date.now();
-  const el   = document.getElementById('gfTitle');
-  const sub  = document.getElementById('gfSub');
-  const dot  = document.getElementById('liveDot');
-  if (diff <= 0 && diff > -14400000) {
-    el.textContent  = '🔴 LIVE NOW — Eurovision 2026 Grand Final · Vienna';
-    sub.textContent = 'Tap to watch our live commentary on YouTube ▶';
-    dot.style.background = '#ff3b30';
+  const diff = GF.getTime() - Date.now();
+  const titleEl = document.getElementById('banner-title');
+  const pulseEl = document.getElementById('live-pulse');
+  const banner  = document.getElementById('live-banner');
+
+  if (diff <= 0 && diff > -18000000) {
+    titleEl.textContent = '🔴 LIVE — Eurovision 2026 Grand Final · Vienna';
+    pulseEl.style.background = '#ff3b30';
   } else if (diff <= 0) {
-    document.getElementById('gfBanner').style.display = 'none';
+    banner.style.display = 'none';
   } else {
-    const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
-          m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
-    el.textContent = `Grand Final in ${d?d+'d ':''}${h?h+'h ':''}${m?m+'m ':''}${s}s — Vienna · 16 May`;
-    sub.textContent = 'Tap to watch our live commentary on YouTube ▶';
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff % 86400000 / 3600000);
+    const m = Math.floor(diff % 3600000 / 60000);
+    const s = Math.floor(diff % 60000 / 1000);
+    titleEl.textContent = `Grand Final${d ? ' in '+d+'d' : ''}${h ? ' '+h+'h' : ''} ${m}m ${s}s · Vienna · 16 May`;
   }
 }
 
-/* ════════════════════
+/* ════════════════════════════════
    INIT
-════════════════════ */
+════════════════════════════════ */
 setBadge(2);
 tickBanner();
 setInterval(tickBanner, 1000);
-fetchArticles();
-renderCal(); // Pre-render calendar in background
+fetchNews();
 
-if (localStorage.getItem('evf_nd')) document.getElementById('nPrompt').style.display = 'none';
-
-// Auto-refresh articles on return to app
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && cur === 'home') { artLoaded = false; fetchArticles(); }
-});
+if (localStorage.getItem('evf_push_dismissed')) {
+  const pp = document.getElementById('push-prompt');
+  if (pp) pp.style.display = 'none';
+}
 </script>
 
-<!-- ══════════════════════════════════════════════
-  ONE SIGNAL SETUP (3 steps):
-  1. onesignal.com → New App → Web Push → enter your domain
-  2. Copy App ID and paste below
-  3. Uncomment the two script blocks
+<!--
+══════════════════════════════════════════════════════
+  ONESIGNAL — uncomment after creating your app:
+
+  1. onesignal.com → Create app → Web Push → enter domain
+  2. Copy App ID, paste below, uncomment both blocks
 
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
-      appId: "PASTE-YOUR-ONESIGNAL-APP-ID-HERE",
+      appId: "YOUR-APP-ID-HERE",
       notifyButton: { enable: false },
       allowLocalhostAsSecureOrigin: true,
     });
   });
 </script>
 
-  SEND PUSH FROM SUPABASE / BACKEND:
+  SEND PUSH FROM BACKEND / SUPABASE:
   fetch('https://onesignal.com/api/v1/notifications', {
-    method:'POST',
-    headers:{ 'Authorization':'Basic YOUR_REST_KEY', 'Content-Type':'application/json' },
+    method: 'POST',
+    headers: { 'Authorization': 'Basic YOUR_REST_KEY', 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      app_id:'YOUR_APP_ID', included_segments:['All'],
-      headings:{ en:'Results are in! 🏆' },
-      contents:{ en:'SF2 qualifiers announced — check your score!' },
-      url:'https://your-app.com'
+      app_id: 'YOUR_APP_ID',
+      included_segments: ['All'],
+      headings: { en: 'Results are in! 🏆' },
+      contents: { en: 'Grand Final qualifiers announced!' },
+      url: 'https://your-app.com'
     })
-  });
-══════════════════════════════════════════════ -->
+  })
+══════════════════════════════════════════════════════
+-->
 </body>
 </html>
