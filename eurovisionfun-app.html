@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06000f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EurovisionFun">
+<meta name="description" content="Eurovision News, Predictions & Social — EurovisionFun">
+<title>EurovisionFun App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06000f;--bg2:#0d001f;--bg3:#120028;--bg4:rgba(255,255,255,0.04);
+  --pink:#e879f9;--purple:#a855f7;
+  --pink-dim:rgba(232,121,249,0.12);
+  --border:rgba(255,255,255,0.08);--border2:rgba(232,121,249,0.22);
+  --text:#fff;--text2:rgba(255,255,255,0.55);--text3:rgba(255,255,255,0.25);
+  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
+  --nav-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;background:var(--bg);font-family:'Montserrat',sans-serif;color:var(--text);overflow:hidden;}
+.app{width:100%;height:100%;display:flex;flex-direction:column;position:relative;}
+.status-bar{height:var(--safe-top);background:var(--bg);flex-shrink:0;}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;flex-shrink:0;background:rgba(6,0,15,0.95);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);z-index:20;position:relative;}
+.topbar-logo{font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,#e879f9,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.topbar-right{display:flex;gap:8px;}
+.topbar-btn{width:34px;height:34px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;position:relative;transition:border-color 0.2s;}
+.topbar-btn:active{border-color:var(--pink);}
+.notif-badge{position:absolute;top:3px;right:3px;width:9px;height:9px;border-radius:50%;background:#e879f9;border:2px solid var(--bg);display:none;}
+.notif-badge.show{display:block;}
+
+.live-banner{background:linear-gradient(90deg,rgba(232,121,249,0.1),rgba(168,85,247,0.08));border-bottom:0.5px solid var(--border2);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#e879f9;flex-shrink:0;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.3;transform:scale(0.7);}}
+.live-text{font-size:11px;font-weight:700;flex:1;}
+.live-sub{font-size:9px;color:var(--text2);}
+
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;opacity:0;transform:translateX(24px);transition:opacity 0.25s ease,transform 0.25s ease;pointer-events:none;}
+.screen.active{opacity:1;transform:translateX(0);pointer-events:auto;}
+.screen-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-bot) + 8px);}
+
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-bot));display:flex;align-items:flex-start;background:rgba(6,0,15,0.97);backdrop-filter:blur(24px);border-top:0.5px solid var(--border);z-index:100;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 6px;cursor:pointer;gap:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--text3);border:none;background:transparent;font-family:'Montserrat',sans-serif;transition:color 0.2s;}
+.nav-btn.active{color:var(--pink);}
+.nav-icon{font-size:22px;line-height:1;}
+.nav-btn.active .nav-icon{filter:drop-shadow(0 0 5px rgba(232,121,249,0.5));}
+
+.sec-label{padding:14px 16px 6px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;justify-content:space-between;}
+.sec-action{color:var(--pink);font-size:10px;font-weight:700;cursor:pointer;}
+
+/* ARTICLES */
+.articles-wrap{padding:0 12px;display:flex;flex-direction:column;gap:10px;}
+.ac{background:var(--bg3);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform 0.18s,border-color 0.18s;text-decoration:none;display:block;}
+.ac:active{transform:scale(0.98);border-color:var(--border2);}
+.ac-img{width:100%;height:0;padding-bottom:52%;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a0040,#3b0764);}
+.ac-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.ac-img-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px;color:rgba(255,255,255,0.1);}
+.ac-badge{position:absolute;top:10px;left:10px;background:rgba(232,121,249,0.9);color:#06000f;font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:20px;z-index:1;}
+.ac-body{padding:11px 12px;}
+.ac-cat{font-size:8px;font-weight:800;color:var(--pink);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.ac-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.45;margin-bottom:5px;}
+.ac-title.sm{font-size:11px;}
+.ac-meta{font-size:9px;color:var(--text3);font-weight:600;}
+.ac-row{display:flex;gap:10px;}
+.ac-row .ac{flex:1;}
+.ac-row .ac .ac-img{padding-bottom:70%;}
+
+@keyframes shimmer{0%{background-position:-400% 0;}100%{background-position:400% 0;}}
+.shimmer-wrap{padding:0 12px;display:flex;flex-direction:column;gap:10px;}
+.shim{height:180px;border-radius:16px;background:linear-gradient(90deg,var(--bg3) 25%,rgba(255,255,255,0.05) 50%,var(--bg3) 75%);background-size:400% 100%;animation:shimmer 1.6s infinite;}
+.shim.sm{height:100px;}
+.shim-row{display:flex;gap:10px;}
+.shim-row .shim{flex:1;}
+
+/* SOCIAL */
+.soc-tabs{display:flex;gap:8px;padding:10px 14px 4px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.soc-tabs::-webkit-scrollbar{display:none;}
+.soc-tab{padding:6px 14px;border-radius:20px;white-space:nowrap;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;border:0.5px solid var(--border);background:var(--bg4);color:var(--text2);font-family:'Montserrat',sans-serif;transition:all 0.2s;}
+.soc-tab.active{background:var(--pink-dim);border-color:var(--border2);color:var(--pink);}
+.soc-feed{padding:6px 12px;display:flex;flex-direction:column;gap:10px;}
+.soc-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;}
+.soc-head{padding:12px 14px 8px;display:flex;align-items:center;gap:10px;}
+.soc-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.ig-bg{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%);}
+.x-bg{background:#000;border:1px solid rgba(255,255,255,0.12);}
+.tt-bg{background:#010101;border:1px solid rgba(255,255,255,0.1);}
+.yt-bg{background:#ff0000;}
+.soc-info{flex:1;}
+.soc-handle{font-size:11px;font-weight:700;}
+.soc-platform{font-size:9px;color:var(--text3);}
+.soc-text{padding:0 14px 10px;font-size:12px;color:var(--text2);line-height:1.65;}
+.soc-btn{margin:0 14px 12px;padding:9px;border-radius:10px;background:var(--bg4);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:border-color 0.2s;}
+.soc-btn:active{border-color:var(--pink);}
+.follow-row{display:flex;gap:8px;padding:0 12px 8px;}
+.follow-chip{flex:1;padding:10px 4px;border-radius:12px;text-align:center;background:var(--bg3);border:0.5px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:border-color 0.2s;}
+.follow-chip:active{border-color:var(--pink);}
+.follow-chip-icon{font-size:18px;display:block;margin-bottom:4px;}
+.follow-chip-label{font-size:9px;font-weight:700;color:var(--text2);}
+
+/* PICKS */
+.picks-wrap{padding:0 12px;}
+.score-band{display:flex;gap:8px;margin-bottom:10px;}
+.score-half{flex:1;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:12px;}
+.score-half.has{border-color:var(--border2);background:var(--pink-dim);}
+.score-sf{font-size:8px;font-weight:800;color:var(--pink);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.score-big{font-size:32px;font-weight:900;color:var(--pink);line-height:1;letter-spacing:-1px;}
+.score-big span{font-size:14px;color:var(--text3);font-weight:600;}
+.score-desc{font-size:9px;color:var(--text2);margin-top:3px;}
+.sf-tabs{display:flex;gap:8px;padding:10px 0;}
+.sf-tab{flex:1;padding:12px 8px;border-radius:14px;text-align:center;cursor:pointer;border:0.5px solid var(--border);background:var(--bg4);font-family:'Montserrat',sans-serif;transition:all 0.2s;}
+.sf-tab.active{background:var(--pink-dim);border-color:var(--border2);}
+.sf-tab-sf{font-size:10px;font-weight:800;color:var(--pink);letter-spacing:1px;text-transform:uppercase;}
+.sf-tab-name{font-size:11px;font-weight:700;margin-top:2px;}
+.sf-tab-sub{font-size:8px;color:var(--text3);margin-top:2px;}
+.preds-wrap{border-radius:16px;overflow:hidden;border:0.5px solid var(--border2);}
+.preds-frame{width:100%;border:none;display:block;min-height:700px;}
+
+/* NOTIFICATIONS */
+.notif-prompt{margin:12px;border-radius:16px;padding:14px;background:var(--pink-dim);border:0.5px solid var(--border2);}
+.np-title{font-size:13px;font-weight:800;margin-bottom:4px;}
+.np-sub{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:10px;}
+.np-btn{width:100%;padding:11px;border-radius:30px;border:none;background:linear-gradient(90deg,#e879f9,#a855f7);color:#fff;font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;cursor:pointer;}
+.np-dismiss{font-size:10px;color:var(--text3);cursor:pointer;text-align:center;margin-top:8px;}
+.notif-sec{padding:4px 16px 6px;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
+.notif-item{margin:0 12px 8px;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;gap:12px;cursor:pointer;transition:border-color 0.2s;}
+.notif-item.unread{border-color:var(--border2);background:rgba(232,121,249,0.05);}
+.notif-item:active{border-color:var(--pink);}
+.ni-icon{width:36px;height:36px;border-radius:12px;background:var(--pink-dim);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ni-body{flex:1;}
+.ni-title{font-size:12px;font-weight:700;line-height:1.35;margin-bottom:3px;}
+.ni-sub{font-size:10px;color:var(--text2);line-height:1.45;}
+.ni-time{font-size:9px;color:var(--text3);margin-top:4px;}
+.ni-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);flex-shrink:0;margin-top:4px;}
+.toggle-row{margin:0 12px 8px;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:12px;}
+.toggle-icon{font-size:18px;width:24px;text-align:center;}
+.toggle-body{flex:1;}
+.toggle-title{font-size:12px;font-weight:700;}
+.toggle-sub{font-size:10px;color:var(--text2);margin-top:2px;}
+.tog{width:42px;height:24px;border-radius:12px;background:var(--bg4);border:0.5px solid var(--border);position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+.tog.on{background:var(--pink);}
+.tog-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 0.2s;}
+.tog.on .tog-knob{transform:translateX(18px);}
+
+/* WEBVIEW */
+.wv-top{display:flex;align-items:center;gap:8px;padding:10px 12px 8px;flex-shrink:0;background:rgba(6,0,15,0.97);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);}
+.wv-back{width:34px;height:34px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
+.wv-url{flex:1;background:var(--bg4);border:0.5px solid var(--border);border-radius:20px;padding:6px 12px;font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wv-ext{width:34px;height:34px;border-radius:50%;background:var(--pink-dim);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--pink);text-decoration:none;flex-shrink:0;}
+.wv-frame{flex:1;width:100%;border:none;background:#fff;}
+.err-state{padding:40px 20px;text-align:center;color:var(--text3);font-size:12px;line-height:1.7;}
+::-webkit-scrollbar{width:0;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="status-bar"></div>
+
+  <div class="topbar">
+    <div class="topbar-logo">EurovisionFun</div>
+    <div class="topbar-right">
+      <div class="topbar-btn" onclick="openWV('https://eurovisionfun.com','EurovisionFun')">🔗</div>
+      <div class="topbar-btn" onclick="switchTab('notifs')">🔔<div class="notif-badge" id="badge"></div></div>
+    </div>
+  </div>
+
+  <div class="live-banner" id="liveBanner" onclick="openWV('https://www.youtube.com/@eurovisionfun_','YouTube Live')">
+    <div class="live-dot"></div>
+    <div style="flex:1;">
+      <div class="live-text" id="liveTitle">Eurovision 2026 Grand Final · Vienna · 16 May 21:00 CET</div>
+      <div class="live-sub">Watch our live commentary on YouTube ▶</div>
+    </div>
+    <div style="font-size:13px;color:var(--pink);">›</div>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="screen-body">
+      <div class="sec-label">
+        <span>Latest from eurovisionfun.com</span>
+        <span class="sec-action" onclick="openWV('https://eurovisionfun.com/en/news/','All articles')">See all →</span>
+      </div>
+      <div id="articles-root">
+        <div class="shimmer-wrap">
+          <div class="shim"></div>
+          <div class="shim-row"><div class="shim sm"></div><div class="shim sm"></div></div>
+          <div class="shim sm"></div><div class="shim sm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="screen" id="screen-social">
+    <div class="soc-tabs">
+      <button class="soc-tab active" onclick="filterSoc('all',this)">All</button>
+      <button class="soc-tab" onclick="filterSoc('ig',this)">Instagram</button>
+      <button class="soc-tab" onclick="filterSoc('x',this)">X / Twitter</button>
+      <button class="soc-tab" onclick="filterSoc('tt',this)">TikTok</button>
+      <button class="soc-tab" onclick="filterSoc('yt',this)">YouTube</button>
+    </div>
+    <div class="screen-body">
+      <div class="soc-feed">
+        <div class="soc-card" data-p="ig">
+          <div class="soc-head"><div class="soc-av ig-bg">📷</div><div class="soc-info"><div class="soc-handle">@eurovisionfn</div><div class="soc-platform">Instagram</div></div></div>
+          <div class="soc-text">Live show updates, backstage photos, predictions graphics and story polls. Follow us for real-time Eurovision coverage!</div>
+          <div class="soc-btn" onclick="openWV('https://www.instagram.com/eurovisionfn/','Instagram @eurovisionfn')">📷 Open @eurovisionfn on Instagram ↗</div>
+        </div>
+        <div class="soc-card" data-p="x">
+          <div class="soc-head"><div class="soc-av x-bg" style="color:#fff;font-weight:900;font-size:13px;">𝕏</div><div class="soc-info"><div class="soc-handle">@eurovisionfn</div><div class="soc-platform">X / Twitter</div></div></div>
+          <div class="soc-text">Live tweeting every show, breaking results, hot takes and threads. Follow for real-time Eurovision on X.</div>
+          <div class="soc-btn" onclick="openWV('https://x.com/eurovisionfn','X @eurovisionfn')">𝕏 Open @eurovisionfn on X ↗</div>
+        </div>
+        <div class="soc-card" data-p="tt">
+          <div class="soc-head"><div class="soc-av tt-bg" style="color:#fff;font-size:16px;">♪</div><div class="soc-info"><div class="soc-handle">@eurovisionfn</div><div class="soc-platform">TikTok</div></div></div>
+          <div class="soc-text">Rankings, rehearsal reactions, fun Eurovision content and more. Find us on TikTok!</div>
+          <div class="soc-btn" onclick="openWV('https://www.tiktok.com/@eurovisionfn','TikTok @eurovisionfn')">♪ Open @eurovisionfn on TikTok ↗</div>
+        </div>
+        <div class="soc-card" data-p="yt">
+          <div class="soc-head"><div class="soc-av yt-bg" style="color:#fff;font-size:14px;">▶</div><div class="soc-info"><div class="soc-handle">@eurovisionfun_</div><div class="soc-platform">YouTube — Live Commentary</div></div></div>
+          <div class="soc-text">We livestream commentary for every Semi-Final and the Grand Final. Subscribe and ring the bell!</div>
+          <div class="soc-btn" onclick="openWV('https://www.youtube.com/@eurovisionfun_','YouTube @eurovisionfun_')">▶ Open @eurovisionfun_ on YouTube ↗</div>
+        </div>
+      </div>
+      <div class="sec-label"><span>Follow us</span></div>
+      <div class="follow-row">
+        <div class="follow-chip" onclick="openWV('https://www.instagram.com/eurovisionfn/','Instagram')"><span class="follow-chip-icon">📷</span><span class="follow-chip-label">Instagram</span></div>
+        <div class="follow-chip" onclick="openWV('https://x.com/eurovisionfn','X')"><span class="follow-chip-icon">𝕏</span><span class="follow-chip-label">Twitter</span></div>
+        <div class="follow-chip" onclick="openWV('https://www.tiktok.com/@eurovisionfn','TikTok')"><span class="follow-chip-icon">♪</span><span class="follow-chip-label">TikTok</span></div>
+        <div class="follow-chip" onclick="openWV('https://www.youtube.com/@eurovisionfun_','YouTube')"><span class="follow-chip-icon">▶</span><span class="follow-chip-label">YouTube</span></div>
+      </div>
+      <div style="margin:4px 12px 8px;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:12px 14px;">
+        <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">💡 Automatic social feed</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.65;">Instagram, TikTok &amp; X require paid API access for automatic post embedding. Tap any card above to open our latest posts directly inside the app.<br><br>To enable a fully automated live feed, connect <strong style="color:var(--text);">Curator.io</strong> to all 3 accounts — it creates a unified JSON feed you can plug in here with zero extra code.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PICKS -->
+  <div class="screen" id="screen-picks">
+    <div class="screen-body">
+      <div class="picks-wrap">
+        <div class="sec-label" style="padding:12px 0 4px;"><span>My Predictions</span></div>
+        <div class="score-band" id="score-band" style="display:none;">
+          <div class="score-half" id="score-sf1"><div class="score-sf">1st Semi-Final</div><div class="score-big" id="s1">—</div><div class="score-desc" id="s1d">No picks yet</div></div>
+          <div class="score-half" id="score-sf2"><div class="score-sf">2nd Semi-Final</div><div class="score-big" id="s2">—</div><div class="score-desc" id="s2d">No picks yet</div></div>
+        </div>
+        <div class="sf-tabs">
+          <div class="sf-tab active" id="sf1" onclick="switchSF(1)"><div class="sf-tab-sf">SF1</div><div class="sf-tab-name">1st Semi-Final</div><div class="sf-tab-sub">12 May 2026</div></div>
+          <div class="sf-tab" id="sf2" onclick="switchSF(2)"><div class="sf-tab-sf">SF2</div><div class="sf-tab-name">2nd Semi-Final</div><div class="sf-tab-sub">14 May 2026</div></div>
+        </div>
+        <div class="preds-wrap">
+          <iframe class="preds-frame" id="pf" src="about:blank" title="EurovisionFun Qualifier Predictions" scrolling="yes"></iframe>
+          <div id="preds-cta" style="padding:24px 16px;text-align:center;display:none;">
+            <div style="font-size:36px;margin-bottom:10px;">🎯</div>
+            <div style="font-size:14px;font-weight:700;margin-bottom:6px;">Qualifier Predictions</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Pick your 10 qualifiers &amp; compete with the community!</div>
+            <button onclick="loadPreds(activeSF)" style="padding:12px 24px;border-radius:30px;background:linear-gradient(90deg,#e879f9,#a855f7);border:none;color:#fff;font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;cursor:pointer;">🗳️ Open Predictions</button>
+          </div>
+        </div>
+      </div>
+      <div style="height:8px;"></div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="screen" id="screen-notifs">
+    <div class="screen-body">
+      <div class="notif-prompt" id="notifPrompt">
+        <div class="np-title">🔔 Never miss a result!</div>
+        <div class="np-sub">Get instant push notifications when qualifiers are revealed, shows start, and new articles drop.</div>
+        <button class="np-btn" onclick="askPush()">Enable Notifications</button>
+        <div class="np-dismiss" onclick="dismissPrompt()">Maybe later</div>
+      </div>
+      <div style="padding:10px 16px 2px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;font-weight:700;">Notifications</span>
+        <span style="font-size:10px;color:var(--pink);font-weight:700;cursor:pointer;" onclick="markAll()">Mark all read</span>
+      </div>
+      <div class="notif-sec">Today</div>
+      <div class="notif-item unread" onclick="markOne(this);openWV('https://eurovisionfun.com/en/2026/05/eurovision-2026-grand-final-jury-show-live-blog/','Grand Final Jury Show')">
+        <div class="ni-icon">🔴</div><div class="ni-body"><div class="ni-title">Grand Final Jury Show — LIVE!</div><div class="ni-sub">Eurovisionfun is covering the Jury Show live from Vienna. Tap to read the live blog.</div><div class="ni-time">Just now</div></div><div class="ni-dot"></div>
+      </div>
+      <div class="notif-item unread" onclick="markOne(this);switchTab('picks')">
+        <div class="ni-icon">🎯</div><div class="ni-body"><div class="ni-title">SF2 scores ready!</div><div class="ni-sub">Results from the 2nd Semi-Final are in. Tap to see how you scored.</div><div class="ni-time">1d ago</div></div><div class="ni-dot"></div>
+      </div>
+      <div class="notif-sec">Earlier</div>
+      <div class="notif-item" onclick="markOne(this)">
+        <div class="ni-icon">🎤</div><div class="ni-body"><div class="ni-title">SF2 goes live in 1 hour!</div><div class="ni-sub">The 2nd Semi-Final starts at 22:00 Athens time. Predictions locked.</div><div class="ni-time">2d ago</div></div>
+      </div>
+      <div class="notif-item" onclick="markOne(this)">
+        <div class="ni-icon">⏰</div><div class="ni-body"><div class="ni-title">Last 30 mins to predict!</div><div class="ni-sub">SF2 predictions close soon. Have you made your 10 picks?</div><div class="ni-time">2d ago</div></div>
+      </div>
+      <div class="notif-sec" style="margin-top:8px;">Notification settings</div>
+      <div class="toggle-row"><div class="toggle-icon">🏆</div><div class="toggle-body"><div class="toggle-title">Results &amp; scores</div><div class="toggle-sub">When qualifiers are announced</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
+      <div class="toggle-row"><div class="toggle-icon">🎤</div><div class="toggle-body"><div class="toggle-title">Show reminders</div><div class="toggle-sub">1h and 15min before each show</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
+      <div class="toggle-row"><div class="toggle-icon">📝</div><div class="toggle-body"><div class="toggle-title">New articles</div><div class="toggle-sub">Breaking news from the site</div></div><div class="tog" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
+      <div class="toggle-row"><div class="toggle-icon">▶️</div><div class="toggle-body"><div class="toggle-title">YouTube live</div><div class="toggle-sub">When our livestream starts</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-knob"></div></div></div>
+    </div>
+  </div>
+
+  <!-- WEBVIEW -->
+  <div class="screen" id="screen-webview" style="z-index:50;">
+    <div class="wv-top">
+      <div class="wv-back" onclick="closeWV()">←</div>
+      <div class="wv-url" id="wv-url">eurovisionfun.com</div>
+      <a class="wv-ext" id="wv-ext" href="#" target="_blank" rel="noopener">↗</a>
+    </div>
+    <iframe class="wv-frame" id="wv-frame" src="about:blank" title="EurovisionFun"></iframe>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="switchTab('home')"><span class="nav-icon">🏠</span>Home</button>
+    <button class="nav-btn" id="nav-social" onclick="switchTab('social')"><span class="nav-icon">📲</span>Social</button>
+    <button class="nav-btn" id="nav-picks" onclick="switchTab('picks')"><span class="nav-icon">🎯</span>Picks</button>
+    <button class="nav-btn" id="nav-notifs" onclick="switchTab('notifs')"><span class="nav-icon">🔔</span>Alerts</button>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════ */
+const SITE = 'https://eurovisionfun.com';
+
+// WordPress REST API — built into every WP site, no plugins needed
+const WP_API = SITE + '/wp-json/wp/v2/posts?per_page=12&_embed=1&_fields=id,title,link,date,_embedded';
+
+// RSS2JSON proxy — fallback when CORS blocks WP API from iframe/app context
+// Free tier: 10k requests/month. Get a free API key at rss2json.com for higher limits.
+const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url='
+  + encodeURIComponent(SITE + '/feed/') + '&count=12';
+
+// ⬇ REPLACE with your hosted predictions HTML URL
+// If the file sits at /predictions/index.html on your server:
+const PREDS_URL = SITE + '/predictions/';
+
+// SF results for score calculation (matches your existing platform)
+const SF1Q = ['Greece','Finland','Belgium','Sweden','Moldova','Israel','Serbia','Croatia','Lithuania','Poland'];
+const SF2Q = ['Bulgaria','Ukraine','Norway','Australia','Romania','Malta','Cyprus','Albania','Denmark','Czechia'];
+
+/* ════════════════════════════════════════
+   NAV
+════════════════════════════════════════ */
+let curTab = 'home', prevTab = 'home';
+const TABS = ['home','social','picks','notifs'];
+
+function switchTab(t) {
+  if (t === curTab) return;
+  document.getElementById('screen-' + curTab).classList.remove('active');
+  document.getElementById('screen-' + t).classList.add('active');
+  TABS.forEach(n => document.getElementById('nav-' + n)?.classList.toggle('active', n === t));
+  prevTab = curTab; curTab = t;
+  if (t === 'notifs') setBadge(0);
+  if (t === 'picks') renderScores();
+  if (t === 'home' && !artLoaded) fetchArticles();
+}
+
+/* ════════════════════════════════════════
+   WEBVIEW
+════════════════════════════════════════ */
+function openWV(url, label) {
+  prevTab = curTab;
+  document.getElementById('screen-' + curTab).classList.remove('active');
+  TABS.forEach(t => document.getElementById('nav-' + t)?.classList.remove('active'));
+  document.getElementById('wv-url').textContent = url.replace(/^https?:\/\//,'');
+  document.getElementById('wv-ext').href = url;
+  document.getElementById('wv-frame').src = url;
+  document.getElementById('screen-webview').classList.add('active');
+  curTab = 'webview';
+}
+
+function closeWV() {
+  document.getElementById('screen-webview').classList.remove('active');
+  document.getElementById('wv-frame').src = 'about:blank';
+  document.getElementById('screen-' + prevTab).classList.add('active');
+  document.getElementById('nav-' + prevTab)?.classList.add('active');
+  curTab = prevTab;
+}
+
+/* ════════════════════════════════════════
+   ARTICLES — WP REST API + RSS fallback
+════════════════════════════════════════ */
+let artLoaded = false;
+
+const timeAgo = d => {
+  const s = (Date.now() - new Date(d)) / 1000;
+  return s < 3600 ? Math.floor(s/60)+'m ago'
+       : s < 86400 ? Math.floor(s/3600)+'h ago'
+       : Math.floor(s/86400)+'d ago';
+};
+
+const strip = h => { const d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; };
+
+const getImg = p => {
+  try { return p._embedded?.['wp:featuredmedia']?.[0]?.source_url || p.thumbnail || ''; } catch { return p.thumbnail || ''; }
+};
+
+const getCat = p => {
+  try { return p._embedded?.['wp:term']?.[0]?.[0]?.name || 'News'; } catch { return 'News'; }
+};
+
+function buildHTML(posts) {
+  if (!posts?.length) return '<div class="err-state">No articles found.<br>Pull down to refresh.</div>';
+  let h = '<div class="articles-wrap">';
+  for (let i = 0; i < posts.length; i++) {
+    const p    = posts[i];
+    const title = strip(p.title?.rendered || p.title || '');
+    const url   = (p.link || p.url || SITE).replace(/'/g,"\\'");
+    const date  = timeAgo(p.date || p.pubDate || new Date());
+    const cat   = getCat(p);
+    const img   = getImg(p);
+    const imgTag = img
+      ? `<img src="${img}" alt="" loading="lazy">`
+      : '<div class="ac-img-fb">🎤</div>';
+
+    if (i === 0) {
+      h += `<a class="ac" href="javascript:void(0)" onclick="openWV('${url}','${strip(title).slice(0,40).replace(/'/g,"\\'")}')">
+        <div class="ac-img">${imgTag}<div class="ac-badge">🔥 LATEST</div></div>
+        <div class="ac-body"><div class="ac-cat">${cat}</div><div class="ac-title">${title}</div><div class="ac-meta">${date} · eurovisionfun.com</div></div>
+      </a>`;
+    } else if (i === 1 && posts[2]) {
+      const p2 = posts[2];
+      const t2 = strip(p2.title?.rendered || p2.title || '');
+      const u2 = (p2.link || p2.url || SITE).replace(/'/g,"\\'");
+      const d2 = timeAgo(p2.date || p2.pubDate || new Date());
+      const c2 = getCat(p2);
+      const i2 = getImg(p2);
+      h += `<div class="ac-row">
+        <a class="ac" href="javascript:void(0)" onclick="openWV('${url}','')">
+          <div class="ac-img">${img?`<img src="${img}" alt="" loading="lazy">`:'<div class="ac-img-fb">⭐</div>'}</div>
+          <div class="ac-body"><div class="ac-cat">${cat}</div><div class="ac-title sm">${title}</div><div class="ac-meta">${date}</div></div>
+        </a>
+        <a class="ac" href="javascript:void(0)" onclick="openWV('${u2}','')">
+          <div class="ac-img">${i2?`<img src="${i2}" alt="" loading="lazy">`:'<div class="ac-img-fb">🏆</div>'}</div>
+          <div class="ac-body"><div class="ac-cat">${c2}</div><div class="ac-title sm">${t2}</div><div class="ac-meta">${d2}</div></div>
+        </a>
+      </div>`;
+      i++; // skip index 2, already rendered
+    } else if (i > 2) {
+      h += `<a class="ac" href="javascript:void(0)" onclick="openWV('${url}','')">
+        <div class="ac-body"><div class="ac-cat">${cat}</div><div class="ac-title">${title}</div><div class="ac-meta">${date} · eurovisionfun.com</div></div>
+      </a>`;
+    }
+  }
+  h += '</div>';
+  return h;
+}
+
+async function fetchArticles() {
+  artLoaded = true;
+  try {
+    // Primary: WordPress REST API
+    const r = await fetch(WP_API, { signal: AbortSignal.timeout(7000) });
+    if (!r.ok) throw new Error();
+    const posts = await r.json();
+    document.getElementById('articles-root').innerHTML = buildHTML(posts);
+  } catch {
+    try {
+      // Fallback: RSS2JSON proxy (no CORS issues)
+      const r2 = await fetch(RSS2JSON, { signal: AbortSignal.timeout(7000) });
+      const d2 = await r2.json();
+      if (d2.status !== 'ok') throw new Error();
+      const posts = d2.items.map(it => ({
+        title: { rendered: it.title },
+        link: it.link,
+        date: it.pubDate,
+        thumbnail: it.thumbnail,
+        _embedded: {}
+      }));
+      document.getElementById('articles-root').innerHTML = buildHTML(posts);
+    } catch {
+      document.getElementById('articles-root').innerHTML = `
+        <div class="err-state">
+          Could not load articles.<br><br>
+          <button onclick="artLoaded=false;document.getElementById('articles-root').innerHTML='<div class=shimmer-wrap><div class=shim></div><div class=shim sm></div></div>';fetchArticles()"
+            style="padding:10px 20px;border-radius:20px;background:var(--pink-dim);border:0.5px solid var(--border2);color:var(--pink);font-weight:700;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;margin-bottom:12px;">
+            🔄 Retry
+          </button><br>
+          <span onclick="openWV('${SITE}','EurovisionFun')" style="color:var(--pink);font-weight:700;font-size:11px;cursor:pointer;">
+            Open eurovisionfun.com →
+          </span>
+        </div>`;
+    }
+  }
+}
+
+/* Pull-to-refresh */
+let ty0 = 0;
+const homeBody = document.getElementById('screen-home').querySelector('.screen-body');
+homeBody.addEventListener('touchstart', e => { ty0 = e.touches[0].clientY; }, { passive: true });
+homeBody.addEventListener('touchend', e => {
+  if (e.changedTouches[0].clientY - ty0 > 60 && homeBody.scrollTop === 0) {
+    artLoaded = false;
+    document.getElementById('articles-root').innerHTML = '<div class="shimmer-wrap"><div class="shim"></div><div class="shim-row"><div class="shim sm"></div><div class="shim sm"></div></div><div class="shim sm"></div></div>';
+    fetchArticles();
+  }
+}, { passive: true });
+
+/* Auto-refresh every 5min when visible */
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && curTab === 'home') { artLoaded = false; fetchArticles(); }
+});
+
+/* ════════════════════════════════════════
+   SOCIAL FILTER
+════════════════════════════════════════ */
+function filterSoc(p, btn) {
+  document.querySelectorAll('.soc-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.soc-card').forEach(c => {
+    c.style.display = (p === 'all' || c.dataset.p === p) ? '' : 'none';
+  });
+}
+
+/* ════════════════════════════════════════
+   PREDICTIONS
+════════════════════════════════════════ */
+let activeSF = 1, pfLoaded = false;
+
+function switchSF(n) {
+  activeSF = n;
+  [1,2].forEach(i => document.getElementById('sf'+i).classList.toggle('active', i===n));
+  if (pfLoaded) document.getElementById('pf').src = PREDS_URL + '?sf=' + n;
+}
+
+function loadPreds(sf) {
+  document.getElementById('preds-cta').style.display = 'none';
+  document.getElementById('pf').src = PREDS_URL + (sf ? '?sf=' + sf : '');
+  pfLoaded = true;
+}
+
+// Auto-load predictions when tab opens (since it's embedded in-app)
+function renderScores() {
+  const picks1 = JSON.parse(localStorage.getItem('evf_picks_sf1') || '[]');
+  const picks2 = JSON.parse(localStorage.getItem('evf_picks_sf2') || '[]');
+  const scoreLabel = n => n===10?'Perfect! 🏆':n>=8?'Amazing! 🔥':n>=6?'Great! 👏':n>=4?'Not bad 🎯':'Keep going 😅';
+  const hasAny = picks1.length || picks2.length;
+  document.getElementById('score-band').style.display = hasAny ? 'flex' : 'none';
+  if (picks1.length) {
+    const c1 = picks1.filter(p => SF1Q.includes(p)).length;
+    document.getElementById('s1').innerHTML = c1+'<span>/10</span>';
+    document.getElementById('s1d').textContent = scoreLabel(c1);
+    document.getElementById('score-sf1').classList.add('has');
+  }
+  if (picks2.length) {
+    const c2 = picks2.filter(p => SF2Q.includes(p)).length;
+    document.getElementById('s2').innerHTML = c2+'<span>/10</span>';
+    document.getElementById('s2d').textContent = scoreLabel(c2);
+    document.getElementById('score-sf2').classList.add('has');
+  }
+  // Auto-load the frame
+  if (!pfLoaded) loadPreds(activeSF);
+}
+
+/* ════════════════════════════════════════
+   NOTIFICATIONS
+════════════════════════════════════════ */
+let unread = 2;
+function setBadge(n) { unread=n; document.getElementById('badge').classList.toggle('show',n>0); }
+function markOne(el) {
+  if (!el.classList.contains('unread')) return;
+  el.classList.remove('unread'); el.querySelector('.ni-dot')?.remove();
+  setBadge(Math.max(0, unread-1));
+}
+function markAll() {
+  document.querySelectorAll('.notif-item.unread').forEach(el => { el.classList.remove('unread'); el.querySelector('.ni-dot')?.remove(); });
+  setBadge(0);
+}
+async function askPush() {
+  // OneSignal SDK (add script below to activate)
+  if (typeof OneSignal !== 'undefined') {
+    try { await OneSignal.Slidedown.promptPush(); } catch {}
+    return;
+  }
+  if ('Notification' in window) {
+    const p = await Notification.requestPermission();
+    const el = document.getElementById('notifPrompt');
+    el.innerHTML = p === 'granted'
+      ? '<div style="text-align:center;padding:6px;"><div style="font-size:28px;margin-bottom:8px;">✅</div><div style="font-size:13px;font-weight:700;">All set!</div><div style="font-size:11px;color:var(--text2);margin-top:4px;line-height:1.5;">You\'ll get alerts for results, show reminders, and new articles.</div></div>'
+      : '<div style="padding:6px;font-size:11px;color:var(--text2);line-height:1.65;"><strong style="color:var(--text);">To enable push:</strong><br>Add this page to your Home Screen (iOS: Share → Add to Home Screen), then open from there and tap Enable again.</div>';
+  }
+}
+function dismissPrompt() {
+  document.getElementById('notifPrompt').style.display = 'none';
+  localStorage.setItem('evf_notif_dismissed','1');
+}
+
+/* ════════════════════════════════════════
+   LIVE BANNER COUNTDOWN
+════════════════════════════════════════ */
+const GF = new Date('2026-05-16T21:00:00+02:00');
+function tickBanner() {
+  const diff = GF - Date.now();
+  const el = document.getElementById('liveTitle');
+  if (diff <= 0 && diff > -14400000) {
+    el.textContent = '🔴 LIVE NOW — Eurovision 2026 Grand Final';
+    document.querySelector('.live-dot').style.background = '#ff3b30';
+  } else if (diff <= 0) {
+    document.getElementById('liveBanner').style.display = 'none';
+  } else {
+    const d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);
+    el.textContent = `Grand Final in ${d?d+'d ':''}${h?h+'h ':''}${m+'m '}${s}s — Vienna`;
+  }
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+setBadge(2);
+tickBanner();
+setInterval(tickBanner, 1000);
+fetchArticles();
+if (localStorage.getItem('evf_notif_dismissed')) document.getElementById('notifPrompt').style.display='none';
+</script>
+
+<!-- ════════════════════════════════════════
+  ONE SIGNAL — 3 steps:
+  1. onesignal.com → New App → Web → enter your domain
+  2. Copy App ID, paste below
+  3. Uncomment these 2 script blocks
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "PASTE-YOUR-ONESIGNAL-APP-ID-HERE",
+      notifyButton: { enable: false },
+      allowLocalhostAsSecureOrigin: true,
+    });
+  });
+</script>
+
+  SEND PUSH FROM YOUR BACKEND / SUPABASE EDGE FUNCTION:
+
+  fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: { 'Authorization': 'Basic YOUR_REST_API_KEY', 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      app_id: 'YOUR_APP_ID',
+      included_segments: ['All'],
+      headings: { en: 'Results are in! 🏆' },
+      contents: { en: 'SF2 qualifiers announced — check your score!' },
+      url: 'https://your-app-url.com'
+    })
+  });
+════════════════════════════════════════ -->
+</body>
+</html>
